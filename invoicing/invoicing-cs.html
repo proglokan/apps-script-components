@@ -1,0 +1,94 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create an invoice</title>
+</head>
+<body>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <div id="app">
+        <p v-if="length">{{ message }}</p>
+    </div>
+    <script>
+        const { createApp, ref } = Vue;
+        createApp({
+            setup() { 
+                const message = ref('kajls');
+                const length = message.value.length > 5;
+                return {
+                    message,
+                    length
+                }
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign up form</title>
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/@formkit/themes@next/dist/genesis/theme.css"
+  />
+  <script async src="https://ga.jspm.io/npm:es-module-shims@1.4.6/dist/es-module-shims.js"></script>
+  <script type="importmap">
+  {
+    "imports": {
+      "vue": "https://cdn.jsdelivr.net/npm/vue@3/dist/vue.esm-browser.js",
+      "@formkit/core": "https://cdn.jsdelivr.net/npm/@formkit/core@1.0.0-beta.8/dist/index.mjs",
+      "@formkit/dev": "https://cdn.jsdelivr.net/npm/@formkit/dev@1.0.0-beta.8/dist/index.mjs",
+      "@formkit/i18n": "https://cdn.jsdelivr.net/npm/@formkit/i18n@1.0.0-beta.8/dist/index.mjs",
+      "@formkit/inputs": "https://cdn.jsdelivr.net/npm/@formkit/inputs@1.0.0-beta.8/dist/index.mjs",
+      "@formkit/observer": "https://cdn.jsdelivr.net/npm/@formkit/observer@1.0.0-beta.8/dist/index.mjs",
+      "@formkit/rules": "https://cdn.jsdelivr.net/npm/@formkit/rules@1.0.0-beta.8/dist/index.mjs",
+      "@formkit/themes": "https://cdn.jsdelivr.net/npm/@formkit/themes@1.0.0-beta.8/dist/index.mjs",
+      "@formkit/utils": "https://cdn.jsdelivr.net/npm/@formkit/utils@1.0.0-beta.8/dist/index.mjs",
+      "@formkit/validation": "https://cdn.jsdelivr.net/npm/@formkit/validation@1.0.0-beta.8/dist/index.mjs",
+      "@formkit/vue": "https://cdn.jsdelivr.net/npm/@formkit/vue@1.0.0-beta.8/dist/index.mjs"
+    }
+  }
+  </script>
+  <script type="module">
+    import { createApp, ref } from 'vue'
+    import { plugin, defaultConfig } from '@formkit/vue'
+
+    createApp({})
+      .use(plugin, defaultConfig)
+      .mount('#app')
+  </script>
+</head>
+<body>
+
+  <div id="app">
+    <form-kit type="group" #default="{ value }">
+      <h2>Create a new password</h2>
+      <form-kit
+        type="password"
+        name="password"
+        label="Password"
+        help="Enter a new password"
+        validation="required"
+        validation-visibility="live"
+      ></form-kit>
+      <form-kit
+        type="password"
+        name="password_confirm"
+        label="Confirm password"
+        help="Confirm your new password"
+        validation="required|confirm"
+        validation-visibility="live"
+        validation-label="Password confirmation"
+      ></form-kit>
+      <pre>{{ value }}</pre>
+    </form-kit>
+    <pre>{{ data }}</pre>
+  </div>
+</body>
+</html>
