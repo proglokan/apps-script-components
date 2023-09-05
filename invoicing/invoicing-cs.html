@@ -1,38 +1,10 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create an invoice</title>
-</head>
-<body>
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <div id="app">
-        <p v-if="length">{{ message }}</p>
-    </div>
-    <script>
-        const { createApp, ref } = Vue;
-        createApp({
-            setup() { 
-                const message = ref('kajls');
-                const length = message.value.length > 5;
-                return {
-                    message,
-                    length
-                }
-            }
-        }).mount('#app');
-    </script>
-</body>
-</html> -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sign up form</title>
+  <title>Create an Invoice</title>
   <link
     rel="stylesheet"
     href="https://cdn.jsdelivr.net/npm/@formkit/themes@next/dist/genesis/theme.css"
@@ -63,10 +35,11 @@
       .use(plugin, defaultConfig)
       .mount('#app')
   </script>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
 
-  <div id="app">
+  <div id="app" class="grid place-content-center mt-12">
     <form-kit type="group" #default="{ value }">
       <h2>Create a new password</h2>
       <form-kit

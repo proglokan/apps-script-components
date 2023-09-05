@@ -33,8 +33,15 @@ function handleInvoice(invoice: Map<string, string | number>): void {
 
 }
 
-function getHeaders(archiveSheet: GoogleAppsScript.Spreadsheet.Sheet): Map<string, string | number> {
+function getHeaders(archiveSheet: GoogleAppsScript.Spreadsheet.Sheet): Map<string, number> {
     const headers: Map<string, number> = new Map();  
+    const upperY: number = archiveSheet.getLastColumn();
+    const headerRange: GoogleAppsScript.Spreadsheet.Range = archiveSheet.getRange(1, 1, 1, upperY);
+    const headerData: string[] = headerRange.getValues()[0];
+    for (const title of headerData) {
+        const row: number = headerData.indexOf(title);
+        headers.set(title, row);
+    }
     return headers;
 }
 
