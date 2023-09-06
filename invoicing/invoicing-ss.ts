@@ -7,9 +7,9 @@ function getSpreadsheet(): GoogleAppsScript.Spreadsheet.Spreadsheet {
 // @subroutine {Function} Impure: string[][] → get invoice config data
 // @arg {GoogleAppsScript.Spreadsheet.Sheet} configSheet → config sheet
 function getConfig(configSheet: GoogleAppsScript.Spreadsheet.Sheet): string[][] {
-    const upperX: number = configSheet.getLastRow();
+    const upperX: number = configSheet.getLastRow() - 1;
     const upperY: number = configSheet.getLastColumn();
-    const configRange: GoogleAppsScript.Spreadsheet.Range = configSheet.getRange(1, 1, upperX, upperY);
+    const configRange: GoogleAppsScript.Spreadsheet.Range = configSheet.getRange(2, 1, upperX, upperY);
     const configData: any[][] = configRange.getValues();
     return configData;
 }
@@ -34,24 +34,24 @@ function invoicingHelper() {
 
 // @subroutine {Function} Impure: Map<string, number> → get sheet headers
 // @arg {GoogleAppsScript.Spreadsheet.Sheet} invoicesSheet → invoices sheet
-function getHeaders(invoicesSheet: GoogleAppsScript.Spreadsheet.Sheet): Map<string, number> {
-    const headers: Map<string, number> = new Map();  
-    const upperY: number = invoicesSheet.getLastColumn();
-    const headerRange: GoogleAppsScript.Spreadsheet.Range = invoicesSheet.getRange(1, 1, 1, upperY);
-    const headerData: string[] = headerRange.getValues()[0];
-    for (const title of headerData) {
-        const row: number = headerData.indexOf(title);
-        headers.set(title, row);
-    }
-    return headers;
-}
+// function getHeaders(invoicesSheet: GoogleAppsScript.Spreadsheet.Sheet): Map<string, number> {
+//     const headers: Map<string, number> = new Map();  
+//     const upperY: number = invoicesSheet.getLastColumn();
+//     const headerRange: GoogleAppsScript.Spreadsheet.Range = invoicesSheet.getRange(1, 1, 1, upperY);
+//     const headerData: string[] = headerRange.getValues()[0];
+//     for (const title of headerData) {
+//         const row: number = headerData.indexOf(title);
+//         headers.set(title, row);
+//     }
+//     return headers;
+// }
 
 // @subroutine {Procedure} Void → post invoice data to invoices sheet
 // @arg {string[]} invoice → user-inputted invoice data
 function handleInvoice(invoice: string[]): void {
     const ss: GoogleAppsScript.Spreadsheet.Spreadsheet = getSpreadsheet();
     const invoicesSheet: GoogleAppsScript.Spreadsheet.Sheet = ss.getSheetByName('Invoices') as GoogleAppsScript.Spreadsheet.Sheet;
-    const headers: Map<string, number> = getHeaders(invoicesSheet);
+    // const headers: Map<string, number> = getHeaders(invoicesSheet);
     const row: number = invoicesSheet.getLastRow() + 1;
     invoicesSheet.getRange(row, 1, 1, invoice.length).setValues([invoice]);
 }
