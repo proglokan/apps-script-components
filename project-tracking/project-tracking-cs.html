@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create an Invoice</title>
+  <script type="importmap">
+    {
+      "imports": {
+        "vue": "https://cdn.jsdelivr.net/npm/vue@3/dist/vue.esm-browser.js"
+      }
+    }
+  </script>
+  <script type="module">
+    import { createApp, ref } from 'vue'
+    createApp({
+      setup() {
+        const inputs = [
+            ['Referencing documentation', 'text', 'referencingDocumentation'],
+            ['Project discussion', 'text', 'projectDiscussion'],
+            ['Planning', 'text', 'planning'],
+            ['Active development', 'text', 'activeDevelopment'],
+            ['Code review', 'text', 'codeReview'],
+            ['Writing documentation', 'text', 'writingDocumentation']
+        ];
+
+        const data = ref(['', '', '', '', '', '']);
+        const isInvalid = ref([false, false, false, false, false, false]);
+
+        function invalidData() {
+          const invalidIndexes = [];
+          for (let x = 0; x < data.value.length; ++x) {
+            if (isNaN(data.value[x])) {
+              invalidIndexes.push(x);
+              continue;
+            }
+
+            if (data.value[x] === '') data.value[x] = '0';
+          }
+          if (invalidIndexes.length) return invalidIndexes;
+          return invalidIndexes.length;
+        }
+
+        function warnInputs(invalidIndexes) {
+          for (const index of invalidIndexes) {
+            isInvalid.value[index] = true;
+          }
+        }
+
+        function sendData() {
+            const invalidIndexes = invalidData();
+            if (invalidIndexes) {
+              warnInputs(invalidIndexes);
+              return;
+            }
+            google.script.run.handleInputs(data.value);
+            google.script.host.close();
+        }
+
+        return {
+          inputs,
+          data,
+          sendData,
+          isInvalid
+        }
+      }
+
+    }).mount('#app')
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+
+  <div id="app" class="grid place-content-center mt-12">
+    <form  class="flex flex-col gap-4">
+      <div v-for="(inputData, index) of inputs" class="flex flex-col w-96">
+        <label :for="inputData[2]" class="text-lg ml-1 font-semibold">{{ inputData[0] }}</label>
+        <input v-model="data[index]" :type="inputData[1]" :name="inputData[2]" class="p-4 rounded-lg flex items-center justify-center border-2 border-slate-400 shadow-lg outline-none focus:border-emerald-400" :class="{ ['border-red-500']: isInvalid[index]}">
+      </div>
+      <button @click.prevent="sendData" class="p-4 rounded-lg flex items-center justify-center bg-slate-500 shadow-lg text-slate-100 text-xl focus:bg-emerald-400">Submit</button>
+    </form>
+  </div>
+</body>
+</html>
