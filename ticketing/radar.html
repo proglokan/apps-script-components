@@ -5,10 +5,8 @@
 		<title>Development Profile Tool</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.0/chart.min.js"></script>
-		<script src="assets/chartjs-plugin-dragdata.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-dragdata@2.2.3/dist/chartjs-plugin-dragdata.min.js"></script>
 		<style>
-			@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@200;300;400;500;600;700;800&display=swap');
 
 			:root {
 				--white-color: #ffffff;
@@ -150,7 +148,7 @@
 								displayVals();
 							},
 							onDragEnd: (e, datasetIndex, index, value) => {
-								event.target.style.cursor = 'default';
+								// event.target.style.cursor = 'default';
 							},
 						},
 					},
@@ -184,9 +182,13 @@
 			};
 
 			function displayVals() {
-				document.querySelector('#adaptability').innerHTML = `${vals.adaptiblity}`;
-				document.querySelector('#velocity').innerHTML = `${vals.velocity}`;
-				document.querySelector('#performance').innerHTML = `${vals.performance}`;
+				const total = vals.adaptiblity + vals.velocity + vals.performance;
+				const adaptiblity = Math.round((vals.adaptiblity / total) * 100);
+				const velocity = Math.round((vals.velocity / total) * 100);
+				const performance = Math.round((vals.performance / total) * 100);
+				document.querySelector('#adaptability').innerHTML = `${vals.adaptiblity} - ${adaptiblity}%`;
+				document.querySelector('#velocity').innerHTML = `${vals.velocity} - ${velocity}%`;;
+				document.querySelector('#performance').innerHTML = `${vals.performance} - ${performance}%`;
 			}
 
 			const ctx = document.querySelector('#chartJSContainer').getContext('2d');
@@ -197,7 +199,7 @@
 				const imageData = radar.toBase64Image();
 				console.log(imageData);
 				download.download = 'dev-profile.png';
-				// download.click();
+				download.click();
 			};
 			displayVals();
 		</script>
