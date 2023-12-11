@@ -14,5 +14,4 @@ function previewHelper() {
     const html: GoogleAppsScript.HTML.HtmlOutput = template.evaluate().setWidth(500).setHeight(700);
     const ui: GoogleAppsScript.Base.Ui = SpreadsheetApp.getUi();
     ui.showModelessDialog(html, 'Preview');
-
 }
