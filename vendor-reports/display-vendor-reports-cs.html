@@ -443,7 +443,7 @@
     }
 
     .Accordion_content {
-      max-height: 3000px;
+      max-height: 0px;
       overflow: hidden;
       padding: 1rem;
       padding-block: 0;
@@ -617,7 +617,7 @@
             v-bind:id="data.row.toString()"
             class="Accordion_input"
           />
-          <label v-bind:htmlFor="data.row.toString()" class="Accordion_label">
+          <label v-bind:for="data.row.toString()" class="Accordion_label">
             {{ data.date }}
             <p>&#9660</p>
           </label>
