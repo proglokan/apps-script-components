@@ -115,19 +115,6 @@ function isUpdated(size: number, data: string[][], headers: _Headers): boolean {
   return true;
 }
 
-// @subroutine {Procedure} Void → send a new entry to the middleware workbook stating that there are no updates
-function noUpdates(): void {
-  const SHEET_NAME = 'Vendor Reports';
-  const sheet: GoogleAppsScript.Spreadsheet.Sheet = getLocalSheet(SHEET_NAME);
-  const row = sheet.getLastRow() + 1;
-  const date = new Date().toLocaleDateString();
-  const timestamp = new Date().toLocaleTimeString();
-  const message = `no updates as of ${timestamp} PST`;
-  const value = `${date}→${JSON.stringify(message)}`;
-  sheet.getRange(row, 1).setValue(value);
-  newLog('vendor-reports-ss', `${new Date().toLocaleDateString()} ${message}`);
-}
-
 // @subroutine {Function} Pure: number[][][] → get cached coordinates of target cells
 function getCoordinates(): number[][][] {
   const cache = CacheService.getScriptCache();
@@ -162,7 +149,7 @@ function getUpdateContents(data: string[][]): (string | boolean)[][] {
 // @subroutine {Procedure} Returns: (string | boolean)[][] → compare the info in middleware to the data from the source workbook and maintain all previous statuses
 // @arg {(string | boolean)[][]} report → info from today's entry in the middleware workbook
 // @arg {(string | boolean)[][]} contents → data from today's updates in the source workbook
-function appendStatuses(report: string, contents: (string | boolean)[][]): (string | boolean)[][] {
+function synchronizeContents(report: string, contents: (string | boolean)[][]): (string | boolean)[][] {
   const info: (string | boolean)[][] = JSON.parse(report);
   for (let x = 0; x < contents.length; ++x) {
       const sourceString = contents[x].slice(0, 5).join('');
@@ -172,30 +159,30 @@ function appendStatuses(report: string, contents: (string | boolean)[][]): (stri
           const lastElement = contents[x].length - 1; 
           contents[x][lastElement] = info[y][lastElement];
           break;
-      }     
+      }
   }
   return contents;
 }
 
 // @subroutine {Procedure} Void → send update to middleware workbook
 // @arg {GoogleAppsScript.Spreadsheet.Sheet} localSheet → the sheet in the middleware workbook to send the update to
-// @arg {(string | boolean)[][]} structuredContents → the data to send to the middleware workbook
-function sendUpdate(localSheet: GoogleAppsScript.Spreadsheet.Sheet, structuredContents: (string | boolean)[][], row: number): void {
+// @arg {(string | boolean)[][]} syncedContents → the data to send to the middleware workbook
+function sendUpdate(localSheet: GoogleAppsScript.Spreadsheet.Sheet, syncedContents: (string | boolean)[][], row: number): void {
   const date = new Date().toLocaleDateString();
-  const data = JSON.stringify(structuredContents);
+  const data = JSON.stringify(syncedContents);
   localSheet.getRange(row, 1).setValue(`${date}→${data}`);
 }
 
 // @subroutine {Helper} Void → get data from a source workbook, check for date-specific updates, transform source data into a report format, store the report in a middleware workbook
-function vendorReportMain(): void {
+function vendorReportTrigger(): void {
   const localSheet = getLocalSheet('Vendor Reports');
   const { row, report, size } = getEntryInfo(localSheet);
   const sheet: GoogleAppsScript.Spreadsheet.Sheet = getSourceSheet();
   const data: string[][] = sheet.getDataRange().getValues();
   const headers: _Headers = getHeaders(sheet);
-  if (!isUpdated(size, data, headers)) return noUpdates(); 
+  if (!isUpdated(size, data, headers)) return newLog('vendor-reports-ss', `no updates as of ${new Date().toLocaleTimeString()} PST`); 
   const contents: (string | boolean)[][] = getUpdateContents(data);
-  const structuredContents = appendStatuses(report, contents);
-  sendUpdate(localSheet, structuredContents, row);
+  const syncedContents = synchronizeContents(report, contents);
+  sendUpdate(localSheet, syncedContents, row);
   newLog('vendor-reports-ss', `new report entry on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()} PST`);
 }

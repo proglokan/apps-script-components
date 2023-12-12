@@ -21,7 +21,7 @@ function deconstructData(constructedData: string[][]): FrontendEntry[] {
     if (cell === 'Vendor Reports') continue;
     const [ date, rawData ] = constructedData[x][0].split('→');
     const data: string[] | string = JSON.parse(rawData);
-    const active = Array.isArray(data) ? true : false;
+    const active = !!data.length;
     const row = x;
     const frontendEntry: FrontendEntry = { date, data, active, row };
     frontendData.push(frontendEntry);
