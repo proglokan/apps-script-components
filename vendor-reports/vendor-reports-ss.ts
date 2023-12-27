@@ -1,5 +1,4 @@
 'use strict';
-type _Headers = Map<string, number>;
 interface Entry {
     size: number;
     row: number;
@@ -56,16 +55,6 @@ function getSourceSheet(): GoogleAppsScript.Spreadsheet.Sheet {
   const sourceSheet: GoogleAppsScript.Spreadsheet.Sheet | null = sourceWorkbook.getSheetByName(SHEET_NAME);
   if (sourceSheet === null) throw new Error(`Sheet ${SHEET_NAME} not found`);
   return sourceSheet;
-}
-
-// @subroutine {Function} Pure: _Headers → get the headers of the source workbook
-// @arg {GoogleAppsScript.Spreadsheet.Sheet} sheet → the sheet in the source workbook
-function getHeaders(sheet: GoogleAppsScript.Spreadsheet.Sheet): _Headers {
-  const upperX: number = sheet.getLastColumn();
-  const data: string[] = sheet.getRange(1, 1, 1, upperX).getValues()[0];
-  const headers: _Headers = new Map();
-  data.forEach((header, index) => headers.set(header, index));
-  return headers;
 }
 
 // @subroutine {Function} Pure: number[] → get the column indexes containing the target cells
