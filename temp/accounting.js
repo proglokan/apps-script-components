@@ -12,7 +12,6 @@ function getValues(sheet) {
     return values;
 }
 function createMapByCategories(values) {
-    const ;
 }
 function accountingHelper() {
     const [ss, sheet] = getSheetData();

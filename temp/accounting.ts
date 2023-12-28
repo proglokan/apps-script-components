@@ -15,7 +15,6 @@ function getValues(sheet: GoogleAppsScript.Spreadsheet.Sheet) {
 }
 
 function createMapByCategories(values: AccountingValues) {
-    const 
 }
 
 function accountingHelper() {

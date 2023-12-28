@@ -9,5 +9,6 @@
     "sourceMap": true
   },
   "include": [
-    "./email-reports/email-reports-ss.ts"  ]
+    "**/*.ts"
+  ]
 }

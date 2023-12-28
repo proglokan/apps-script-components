@@ -1,4 +1,5 @@
 'use strict';
+import { fetchSheet, getHeaders } from '../global/global';
 // [+] REFERENCE FOR COMPILED FILE
 // 
 // type _Headers = Map<string, number>;
@@ -18,7 +19,8 @@ function getRequirements() {
                 ['Admin - Kesh/Nimrod', 1],
                 ['PO Sent (PO Owner)', 2],
                 ['PO Processing (Buying)', 3],
-                ['VI/Ready to Pay (Buying) - Move to APOVI/Ready', 2],
+                ['VI/Invoice Rcvd | Need Approval', 1],
+                ['Ready to Pay | Final Approval | Move to APO', 2]
             ]
         ],
         [
@@ -37,7 +39,7 @@ function getRequirements() {
                 ['Wh - Partial - Rcvd', 7],
                 ['Case Opened', 2],
                 ['WH-RCV-Case Open', 2],
-                ['Partial - Sent to Outbound', 2] // [+] Check with kesh
+                ['Partial - Sent to Outbound', 2]
             ]
         ], [
             'Outbound', [
