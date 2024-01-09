@@ -1,3 +1,4 @@
+'use strict';
 import { fetchActiveSheet } from "../global/global";
 
 
