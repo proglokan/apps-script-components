@@ -15,10 +15,11 @@ function updateStatus(report: (string | boolean)[][], index: number): void {
   report[index] = row;
 }
 
+// [+] REMOVE FROM HERE; IN GLOBAL
 // @subroutine {Function} Pure: string → reconstructs an entry from a date and appended report data
-function reconstructEntry(date: string, report: (string | boolean)[][]): string {
-  const reportString = JSON.stringify(report);
-  const entry = `${date}→${reportString}`;
+function reconstructEntry(date: string, array: (string | boolean)[][]): string {
+  const string = JSON.stringify(array);
+  const entry = `${date}→${string}`;
   return entry;
 }
 
