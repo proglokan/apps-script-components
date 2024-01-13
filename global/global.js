@@ -1,6 +1,6 @@
 'use strict';
 // [+] REFERENCE FOR COMPILED FILE
-// 
+//
 // type _Headers = Map<string, number>;
 // type Body = string[][];
 // @subroutine {Function} Pure: GoogleAppsScript.Spreadsheet.Sheet → fetch a sheet obj from internal and external workbooks
@@ -15,7 +15,9 @@ function fetchSheet(id, name) {
         const ss = SpreadsheetApp.getActiveSpreadsheet();
         return ss;
     };
-    const sheet = id ? external(id).getSheetByName(name) : internal().getSheetByName(name);
+    const sheet = id
+        ? external(id).getSheetByName(name)
+        : internal().getSheetByName(name);
     if (sheet === null)
         throw new Error(`Sheet ${name} not found`);
     return sheet;

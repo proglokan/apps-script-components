@@ -171,4 +171,5 @@ function vendorReportTrigger() {
     sendUpdate(localSheet, syncedContents, row);
     newLog('vendor-reports-ss', `new report entry on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()} PST`);
 }
+export {};
 //# sourceMappingURL=vendor-reports-ss.js.map

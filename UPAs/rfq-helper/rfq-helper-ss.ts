@@ -75,7 +75,7 @@ function getValues(targetColumns: number[], targetValues: Body): Body {
 
 // @subroutine {Procedure}: Void → serve confirmation message to the user
 function serveConfirmation(upperY: number, targetRow: number): void {
-  const message = !upperY
+  const message = upperY > 1
     ? `Entries have been created in rows ${targetRow}-${targetRow + upperY}`
     : `Entry has been created in row ${targetRow}`;
   SpreadsheetApp.getActiveSpreadsheet().toast(message, 'RFQ has been updated');

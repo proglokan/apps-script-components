@@ -13,10 +13,11 @@ function updateStatus(report, index) {
     row[lastElement] = !row[lastElement];
     report[index] = row;
 }
+// [+] REMOVE FROM HERE; IN GLOBAL
 // @subroutine {Function} Pure: string → reconstructs an entry from a date and appended report data
-function reconstructEntry(date, report) {
-    const reportString = JSON.stringify(report);
-    const entry = `${date}→${reportString}`;
+function reconstructEntry(date, array) {
+    const string = JSON.stringify(array);
+    const entry = `${date}→${string}`;
     return entry;
 }
 // @subroutine {Procedure} Void → send appended entry to middleware workbook as an update
