@@ -1,12 +1,22 @@
 'use strict';
 import { fetchSheet, getHeaders, _Headers, Body } from '../../global/global';
 
+// [+] REFERENCE FOR COMPILED FILE
+//
+// type _Headers = Map<string, number>;
+// type Body = string[][];
+
+// @subroutine {Function} Pure: Body → get target values to be sent to target sheet
+// @arg {Body} sourceValues → 2d array of values to be extracted and turned into target values
+// @arg {string[]} sourceColumnNames → array of column names in the source sheet
+// @arg {_Headers} sourceHeaders → the headers of the source spreadsheet
+// @arg {GoogleAppsScript.Spreadsheet.Sheet} sourceSheet → where the selection data is being pulled from
 function getTargetValues(
   sourceValues: Body,
   sourceColumnNames: string[],
   sourceHeaders: _Headers,
   sourceSheet: GoogleAppsScript.Spreadsheet.Sheet
-): string[][] {
+): Body {
   const targetValues = [];
   for (const row of sourceValues) {
     const extractedData = [];
@@ -24,6 +34,10 @@ function getTargetValues(
   return targetValues;
 }
 
+// @subroutine {Function} Pure: number[] → get target column indexes in the target sheet
+// @arg {string[]} targetColumnNames → array of column names in the target sheet
+// @arg {_Headers} targetHeaders → the headers of the target spreadsheet
+// @arg {GoogleAppsScript.Spreadsheet.Sheet} targetSheet → where the selection data is being sent to
 function getTargetColumns(
   targetColumnNames: string[],
   targetHeaders: _Headers,
@@ -41,7 +55,10 @@ function getTargetColumns(
   return targetColumns;
 }
 
-function getValues(targetColumns: number[], targetValues: string[][]): Body {
+// @subroutine {Function} Pure: Body → structuring target values based on target sheets coordinates
+// @arg {number[]} targetColumns → array of column positions
+// @arg {Body} targetValues → array of values to be structured and stored in the target sheet
+function getValues(targetColumns: number[], targetValues: Body): Body {
   const values: Body = [];
   const valuesSize = Math.max(...targetColumns);
   for (const targetRow of targetValues) {
@@ -56,17 +73,19 @@ function getValues(targetColumns: number[], targetValues: string[][]): Body {
   return values;
 }
 
-function serveConfirmation(upperY: number, targetRow: number) {
+// @subroutine {Procedure}: Void → serve confirmation message to the user
+function serveConfirmation(upperY: number, targetRow: number): void {
   const message = !upperY
     ? `Entries have been created in rows ${targetRow}-${targetRow + upperY}`
     : `Entry has been created in row ${targetRow}`;
   SpreadsheetApp.getActiveSpreadsheet().toast(message, 'RFQ has been updated');
 }
 
+// @subroutine {Procedure}: Void → send target values from source sheet to the target sheet
 function sendValues(
   targetSheet: GoogleAppsScript.Spreadsheet.Sheet,
   values: Body
-) {
+): void {
   const targetRow = targetSheet.getLastRow() + 1;
   const upperY = values.length;
   const upperX = values[0].length;
@@ -74,7 +93,8 @@ function sendValues(
   serveConfirmation(upperY, targetRow);
 }
 
-function rfqHelperMain() {
+// @subroutine {Helper} Void → move selected data from source sheet to target sheet
+function rfqHelperMain(): void {
   const sourceColumnNames = [
     'Vendor Name',
     'Vendor SKU',
