@@ -1,5 +1,5 @@
 'use strict';
-import { fetchSheet, getHeaders, _Headers } from '../global/global';
+import { fetchSheet, getHeaders, _Headers } from '../../global/global';
 type Requirements = Map<string, Array<[string, number]>>;
 type AggregateData = Map<string, { headers: _Headers, body: string[][] }>;
 type EmailContentRow = Map<string, Map<string, number>>;

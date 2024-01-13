@@ -1,5 +1,5 @@
 'use strict';
-import { fetchActiveSheet, getHeaders, _Headers, Body } from "../global/global";
+import { fetchActiveSheet, getHeaders, _Headers, Body } from "../../global/global";
 
 // [+] REFERENCE FOR COMPILED FILE
 // 

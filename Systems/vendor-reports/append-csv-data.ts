@@ -1,4 +1,4 @@
-import { fetchSheet } from "../global/global"
+import { fetchSheet } from "../../global/global"
 import { reconstructEntry } from "./vendor-reports-global";
 
 function getParsedRow(row: string[]) {

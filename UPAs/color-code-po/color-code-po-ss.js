@@ -1,5 +1,5 @@
 'use strict';
-import { fetchActiveSheet, getHeaders } from "../global/global";
+import { fetchActiveSheet, getHeaders } from "../../global/global";
 // [+] REFERENCE FOR COMPILED FILE
 // 
 // type _Headers = Map<string, number>;
