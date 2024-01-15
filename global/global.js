@@ -1,5 +1,5 @@
 'use strict';
-// [+] REFERENCE FOR COMPILED FILE
+// * REFERENCE FOR COMPILED FILE
 //
 // type _Headers = Map<string, number>;
 // type Body = string[][];
