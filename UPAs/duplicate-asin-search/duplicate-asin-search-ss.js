@@ -22,7 +22,7 @@ function getComparativeAsins(data, asinHeader) {
     for (const [sheet, headers, body] of data) {
         const xCoordinate = headers.get(asinHeader);
         if (!xCoordinate)
-            throw new Error(`Header ${asinHeader} not found in ${sheet.getName()}`);
+            throw new Error(`Header '${asinHeader}' not found in ${sheet.getName()}`);
         const asinColumn = body.map(row => row[xCoordinate]);
         dataSets.push(asinColumn);
     }
@@ -81,11 +81,11 @@ function getCoordinates(sheet, column, values) {
 function updateStatusValues(rfqHeaders, rfqBody, statusHeader, duplicates) {
     const statusColumn = rfqHeaders.get(statusHeader);
     if (!statusColumn)
-        throw new Error(`Header ${statusHeader} not found in RFQ`);
+        throw new Error(`Header '${statusHeader}' not found in RFQ`);
     const statusValues = extractStatusValues(rfqBody, statusColumn);
     for (let x = 0; x < duplicates.length; ++x) {
         const row = duplicates[x];
-        statusValues[row][0] = 'duplicate order';
+        statusValues[row][0] = 'Duplicate Asins - Please Review';
     }
     const valuesCoordinates = getCoordinates(null, statusColumn, statusValues);
     return [statusValues, valuesCoordinates];
@@ -112,7 +112,7 @@ function duplicateAsinSearchMain() {
     const rfqSheet = fetchSheet(null, 'RFQ');
     const rfqHeaders = getHeaders(rfqSheet);
     const rfqBody = rfqSheet.getDataRange().getValues();
-    const apoAmzSheet = fetchSheet(null, 'APO - Amz');
+    const apoAmzSheet = fetchSheet(null, 'APO-Amz');
     const apoAmzHeaders = getHeaders(apoAmzSheet);
     const apoAmzBody = apoAmzSheet.getDataRange().getValues();
     const [asinHeader, statusHeader] = ['ASIN', 'Status'];

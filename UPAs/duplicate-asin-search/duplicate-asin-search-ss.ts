@@ -93,7 +93,7 @@ function updateStatusValues(rfqHeaders: _Headers, rfqBody: Body, statusHeader: s
   const statusValues: Body = extractStatusValues(rfqBody, statusColumn);
   for (let x = 0; x < duplicates.length; ++x) {
     const row = duplicates[x];
-    statusValues[row][0] = 'duplicate order';
+    statusValues[row][0] = 'Duplicate Asins - Please Review';
   }
   const valuesCoordinates: Coordinates<number[]> = getCoordinates(null, statusColumn, statusValues);
   return [statusValues, valuesCoordinates];
@@ -123,7 +123,7 @@ function duplicateAsinSearchMain(): void {
   const rfqSheet: GoogleAppsScript.Spreadsheet.Sheet = fetchSheet(null, 'RFQ');
   const rfqHeaders: _Headers = getHeaders(rfqSheet);
   const rfqBody: Body = rfqSheet.getDataRange().getValues();
-  const apoAmzSheet: GoogleAppsScript.Spreadsheet.Sheet = fetchSheet(null, 'APO - Amz');
+  const apoAmzSheet: GoogleAppsScript.Spreadsheet.Sheet = fetchSheet(null, 'APO-Amz');
   const apoAmzHeaders: _Headers = getHeaders(apoAmzSheet);
   const apoAmzBody: Body = apoAmzSheet.getDataRange().getValues();
   const [ asinHeader, statusHeader ] = ['ASIN', 'Status'];

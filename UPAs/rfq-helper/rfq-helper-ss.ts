@@ -1,5 +1,5 @@
 'use strict';
-import { fetchSheet, getHeaders, _Headers, Body } from '../../global/global';
+import { fetchSheet, fetchActiveSheet, getHeaders, _Headers, Body } from '../../global/global';
 
 // [+] REFERENCE FOR COMPILED FILE
 //
@@ -103,7 +103,7 @@ function rfqHelperMain(): void {
     'ORDER QTY',
     'UNIT COST',
   ];
-  const sourceSheet = fetchSheet(null, 'Master List');
+  const sourceSheet = fetchActiveSheet();
   const sourceHeaders = getHeaders(sourceSheet);
   const targetColumnNames = [
     'Vendor',

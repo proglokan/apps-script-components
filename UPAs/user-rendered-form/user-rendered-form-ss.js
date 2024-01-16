@@ -51,4 +51,4 @@ function handleInvoice(invoice) {
     const row = invoicesSheet.getLastRow() + 1;
     invoicesSheet.getRange(row, 1, 1, invoice.length).setValues([invoice]);
 }
-//# sourceMappingURL=invoicing-ss.js.map
+//# sourceMappingURL=user-rendered-form-ss.js.map
