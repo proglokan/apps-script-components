@@ -1,18 +1,5 @@
-// @subroutine {Function} Impure: GoogleAppsScript.Spreadsheet.Spreadsheet → get active spreadsheet
-function getSpreadsheet(): GoogleAppsScript.Spreadsheet.Spreadsheet {
-    const ss: GoogleAppsScript.Spreadsheet.Spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-    return ss;
-}
-
-// @subroutine {Function} Impure: string[][] → get invoice config data
-// @arg {GoogleAppsScript.Spreadsheet.Sheet} configSheet → config sheet
-function getConfig(configSheet: GoogleAppsScript.Spreadsheet.Sheet): string[][] {
-    const upperX: number = configSheet.getLastRow() - 1;
-    const upperY: number = configSheet.getLastColumn();
-    const configRange: GoogleAppsScript.Spreadsheet.Range = configSheet.getRange(2, 1, upperX, upperY);
-    const configData: any[][] = configRange.getValues();
-    return configData;
-}
+'use strict';
+import { fetchSheet } from "../../global/global";
 
 // @subroutine {Procedure} Void → render inputs in template modal
 // @arg {string[][]} config → invoice inputs config data
@@ -24,11 +11,10 @@ function renderConfig(config: string[][]): void {
     ui.showModelessDialog(html, 'Invoicing Config');
 }
 
-// @subroutine {Procedure} Void → helper
+// @subroutine {Helper} Void → 
 function invoicingHelper() {
-    const ss: GoogleAppsScript.Spreadsheet.Spreadsheet = getSpreadsheet();
-    const configSheet: GoogleAppsScript.Spreadsheet.Sheet = ss.getSheetByName('Invoicing Config') as GoogleAppsScript.Spreadsheet.Sheet;
-    const config: any[][] = getConfig(configSheet);
+    const configSheet: GoogleAppsScript.Spreadsheet.Sheet = fetchSheet(null, 'Config');
+    const config: string[][] = configSheet.getDataRange().getValues();
     renderConfig(config);
 }
 
@@ -49,8 +35,7 @@ function invoicingHelper() {
 // @subroutine {Procedure} Void → post invoice data to invoices sheet
 // @arg {string[]} invoice → user-inputted invoice data
 function handleInvoice(invoice: string[]): void {
-    const ss: GoogleAppsScript.Spreadsheet.Spreadsheet = getSpreadsheet();
-    const invoicesSheet: GoogleAppsScript.Spreadsheet.Sheet = ss.getSheetByName('Invoices') as GoogleAppsScript.Spreadsheet.Sheet;
+    const invoicesSheet: GoogleAppsScript.Spreadsheet.Sheet = fetchSheet(null, 'Invoices');
     // const headers: Map<string, number> = getHeaders(invoicesSheet);
     const row: number = invoicesSheet.getLastRow() + 1;
     invoicesSheet.getRange(row, 1, 1, invoice.length).setValues([invoice]);
