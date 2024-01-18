@@ -44,5 +44,13 @@ function parseSheet(sheet) {
     const body = sheet.getDataRange().getValues();
     return [headers, body];
 }
-export { fetchSheet, fetchActiveSheet, getHeaders, parseSheet };
+function validation(type, input) {
+    switch (type) {
+        case 'Purchase Order ID':
+            return /^10-\d{5}$/g.test(input);
+        default:
+            return new Error(`Author Time: ${type} is an invalid case!`);
+    }
+}
+export { fetchSheet, fetchActiveSheet, getHeaders, parseSheet, validation };
 //# sourceMappingURL=global.js.map

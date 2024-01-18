@@ -56,4 +56,14 @@ function parseSheet(
   return [headers, body];
 }
 
-export { fetchSheet, fetchActiveSheet, getHeaders, _Headers, Body, parseSheet };
+function validation(type: string, input: string) {
+  switch (type) {
+    case 'Purchase Order ID':
+      return /^10-\d{5}$/g.test(input);
+    default:
+      return new Error(`Author Time: ${type} is an invalid case!`);
+      
+  }
+}
+
+export { fetchSheet, fetchActiveSheet, getHeaders, _Headers, Body, parseSheet, validation };

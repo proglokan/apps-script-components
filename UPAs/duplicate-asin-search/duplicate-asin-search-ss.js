@@ -1,4 +1,5 @@
 import { fetchSheet, getHeaders } from "../../global/global";
+import { getDuplicates } from "../upa-global/upa-global";
 'use strict';
 // * REFERENCE FOR COMPILED FILE
 //
@@ -30,25 +31,6 @@ function getComparativeAsins(data, asinHeader) {
     comparativeAsins.reference = reference;
     comparativeAsins.comparison = comparison;
     return comparativeAsins;
-}
-// @subroutine {Function} Pure: number[] → get indexes of duplicate ASINs
-// @arg {string[]} reference → >= list of ASINs from the RFQ sheet
-// @arg {string[]} comparison → <= list of ASINs from the APO - Amz sheet
-function getDuplicates(reference, comparison) {
-    const duplicates = [];
-    for (let x = 1; x < reference.length; ++x) {
-        const referenceAsin = reference[x];
-        if (referenceAsin === '')
-            continue;
-        for (let y = 1; y < comparison.length; ++y) {
-            const comparisonAsin = comparison[y];
-            if (referenceAsin !== comparisonAsin)
-                continue;
-            duplicates.push(x);
-            break;
-        }
-    }
-    return duplicates;
 }
 // @subroutine {Function} Pure: Body → extract values from the status column of the RFQ sheet
 // @arg {Body} rfqBody → body from the RFQ sheet

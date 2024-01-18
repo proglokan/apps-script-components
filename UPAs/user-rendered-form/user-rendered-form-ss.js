@@ -1,18 +1,5 @@
-"use strict";
-// @subroutine {Function} Impure: GoogleAppsScript.Spreadsheet.Spreadsheet → get active spreadsheet
-function getSpreadsheet() {
-    const ss = SpreadsheetApp.getActiveSpreadsheet();
-    return ss;
-}
-// @subroutine {Function} Impure: string[][] → get invoice config data
-// @arg {GoogleAppsScript.Spreadsheet.Sheet} configSheet → config sheet
-function getConfig(configSheet) {
-    const upperX = configSheet.getLastRow() - 1;
-    const upperY = configSheet.getLastColumn();
-    const configRange = configSheet.getRange(2, 1, upperX, upperY);
-    const configData = configRange.getValues();
-    return configData;
-}
+'use strict';
+import { fetchSheet } from "../../global/global";
 // @subroutine {Procedure} Void → render inputs in template modal
 // @arg {string[][]} config → invoice inputs config data
 function renderConfig(config) {
@@ -22,11 +9,10 @@ function renderConfig(config) {
     const ui = SpreadsheetApp.getUi();
     ui.showModelessDialog(html, 'Invoicing Config');
 }
-// @subroutine {Procedure} Void → helper
+// @subroutine {Helper} Void → 
 function invoicingHelper() {
-    const ss = getSpreadsheet();
-    const configSheet = ss.getSheetByName('Invoicing Config');
-    const config = getConfig(configSheet);
+    const configSheet = fetchSheet(null, 'Config');
+    const config = configSheet.getDataRange().getValues();
     renderConfig(config);
 }
 // @subroutine {Function} Impure: Map<string, number> → get sheet headers
@@ -45,8 +31,7 @@ function invoicingHelper() {
 // @subroutine {Procedure} Void → post invoice data to invoices sheet
 // @arg {string[]} invoice → user-inputted invoice data
 function handleInvoice(invoice) {
-    const ss = getSpreadsheet();
-    const invoicesSheet = ss.getSheetByName('Invoices');
+    const invoicesSheet = fetchSheet(null, 'Invoices');
     // const headers: Map<string, number> = getHeaders(invoicesSheet);
     const row = invoicesSheet.getLastRow() + 1;
     invoicesSheet.getRange(row, 1, 1, invoice.length).setValues([invoice]);
