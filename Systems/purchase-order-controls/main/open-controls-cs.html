@@ -91,7 +91,6 @@
             searchError.value = false;
             validationError.value = false;
             success.value = false;
-            loading.value = true;
           }
 
           function handleFetchResult(response) {
@@ -140,7 +139,8 @@
           }
 
           function handleQuery() {
-            if (loading) return;
+            if (loading.value) return;
+            loading.value = true;
             google.script.run
               .withSuccessHandler(readValidation)
               .validation('Purchase Order ID', purchaseOrderId.value);
@@ -181,8 +181,7 @@
         </div>
         <button
           @click="handleQuery"
-          class="p-4 rounded-lg flex items-center justify-center bg-purple-500 shadow-lg text-violet-100 text-xl focus:bg-indigo-500"
-          :disabled="loading"
+          class="p-4 rounded-lg flex items-center justify-center bg-purple-500 shadow-lg text-violet-100 text-xl"
         >
           <div class="lds-ellipsis" v-if="loading">
             <div></div>
