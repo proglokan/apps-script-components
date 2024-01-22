@@ -62,4 +62,4 @@ function fetchPurchaseOrderBodyMain(purchaseOrderId) {
     const response = { coordinates, bodyJSON };
     return response;
 }
-//# sourceMappingURL=fetch-purchase-order-body-ss.js.map
+//# sourceMappingURL=handle-query.js.map

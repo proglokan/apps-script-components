@@ -50,7 +50,7 @@ function getPurchaseOrderBody(purchaseOrderColumn: number, purchaseOrderId: stri
 
 // @subroutine {Helper} Pure: Body | Error → get the purchase order body from the active sheet
 // @arg {string} purchaseOrderId → the purchase order id to search for, from user input
-function fetchPurchaseOrderBodyMain(purchaseOrderId: string): ClientQueryResponse | Error {
+function handleQueryMain(purchaseOrderId: string): ClientQueryResponse | Error {
 	const activeSheet = fetchActiveSheet();
 	const activeSheetHeaders: _Headers = getHeaders(activeSheet);
 	const activeSheetBody: Body = activeSheet.getDataRange().getValues();
