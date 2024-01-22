@@ -1,130 +1,221 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title></title>
-		<script src="https://cdn.tailwindcss.com"></script>
-		<script type="importmap">
-			{
-				"imports": {
-					"vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
-				}
-			}
-		</script>
-		<script type="module" defer>
-			import { createApp, ref } from 'vue';
-			createApp({
-				setup() {
-					const purchaseOrderId = ref('');
-					const validationError = ref(false);
-					const searchError = ref(false);
-					const success = ref(false);
-					const loading = ref(false);
-					const purchaseOrderIdSnapshot = ref('');
-					const purchaseOrderData = ref({});
-					function reset() {
-						purchaseOrderId.value = '';
-						error.value = false;
-						success.value = false;
-					}
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+    <style>
+      .lds-ellipsis {
+        display: inline-block;
+        position: relative;
+        width: 93.58px;
+        height: 28px;
+      }
+      .lds-ellipsis div {
+        position: absolute;
+        top: 8px;
+        width: 13px;
+        height: 13px;
+        border-radius: 50%;
+        background: #fff;
+        animation-timing-function: cubic-bezier(0, 1, 1, 0);
+      }
+      .lds-ellipsis div:nth-child(1) {
+        left: 16px;
+        animation: lds-ellipsis1 0.6s infinite;
+      }
+      .lds-ellipsis div:nth-child(2) {
+        left: 16px;
+        animation: lds-ellipsis2 0.6s infinite;
+      }
+      .lds-ellipsis div:nth-child(3) {
+        left: 40px;
+        animation: lds-ellipsis2 0.6s infinite;
+      }
+      .lds-ellipsis div:nth-child(4) {
+        left: 64px;
+        animation: lds-ellipsis3 0.6s infinite;
+      }
+      @keyframes lds-ellipsis1 {
+        0% {
+          transform: scale(0);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+      @keyframes lds-ellipsis3 {
+        0% {
+          transform: scale(1);
+        }
+        100% {
+          transform: scale(0);
+        }
+      }
+      @keyframes lds-ellipsis2 {
+        0% {
+          transform: translate(0, 0);
+        }
+        100% {
+          transform: translate(24px, 0);
+        }
+      }
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
+        }
+      }
+    </script>
+    <script type="module" defer>
+      import { createApp, ref } from 'vue';
+      createApp({
+        setup() {
+          const purchaseOrderId = ref('');
+          const validationError = ref(false);
+          const searchError = ref(false);
+          const success = ref(false);
+          const loading = ref(false);
+          const purchaseOrderIdSnapshot = ref('');
+          const purchaseOrderData = ref({});
+          function reset() {
+            purchaseOrderId.value = '';
+            error.value = false;
+            success.value = false;
+          }
 
-					function setFlags() {
-						searchError.value = false;
-						validationError.value = false;
-						success.value = false;
-						loading.value = true;
-					}
+          function setFlags() {
+            searchError.value = false;
+            validationError.value = false;
+            success.value = false;
+            loading.value = true;
+          }
 
-					function handleFetchResult(response) {
-						if (response?.name) {
-							validationError.value = false;
-							success.value = false;
-							loading.value = false;
-							purchaseOrderIdSnapshot.value = purchaseOrderId.value;
-							searchError.value = true;
-							return;
-						}
+          function handleFetchResult(response) {
+            if (response?.name) {
+              validationError.value = false;
+              success.value = false;
+              loading.value = false;
+              purchaseOrderIdSnapshot.value = purchaseOrderId.value;
+              searchError.value = true;
+              return;
+            }
 
-						const { bodyJSON, coordinates } = response;
-						const body = JSON.parse(bodyJSON);
+            const { bodyJSON, coordinates } = response;
+            const body = JSON.parse(bodyJSON);
 
-						if (body) {
-							loading.value = false;
-							validationError.value = false;
-							searchError.value = false;
-							purchaseOrderIdSnapshot.value = purchaseOrderId.value;
-							purchaseOrderData.value.body = body;
-							purchaseOrderData.value.coordinates = coordinates;
-							success.value = true;
-							return;
-						}
-					}
+            if (body) {
+              loading.value = false;
+              validationError.value = false;
+              searchError.value = false;
+              purchaseOrderIdSnapshot.value = purchaseOrderId.value;
+              purchaseOrderData.value.body = body;
+              purchaseOrderData.value.coordinates = coordinates;
+              success.value = true;
+              return;
+            }
+          }
 
-					function fetchPurchaseOrderBody() {
-						setFlags();
-						google.script.run.withSuccessHandler(handleFetchResult).fetchPurchaseOrderBodyMain(purchaseOrderId.value);
-					}
+          function fetchPurchaseOrderBody() {
+            setFlags();
+            google.script.run
+              .withSuccessHandler(handleFetchResult)
+              .fetchPurchaseOrderBodyMain(purchaseOrderId.value);
+          }
 
-					function readValidation(validationResult) {
-						if (!validationResult) {
-							purchaseOrderIdSnapshot.value = purchaseOrderId.value;
-							loading.value = false;
-							searchError.value = false;
-							validationError.value = false;
-							success.value = false;
-							validationError.value = true;
-							return;
-						}
-						fetchPurchaseOrderBody();
-					}
+          function readValidation(validationResult) {
+            if (!validationResult) {
+              purchaseOrderIdSnapshot.value = purchaseOrderId.value;
+              loading.value = false;
+              searchError.value = false;
+              validationError.value = false;
+              success.value = false;
+              validationError.value = true;
+              return;
+            }
+            fetchPurchaseOrderBody();
+          }
 
-					function handleQuery() {
-						google.script.run.withSuccessHandler(readValidation).validation('Purchase Order ID', purchaseOrderId.value);
-					}
+          function handleQuery() {
+            if (loading) return;
+            google.script.run
+              .withSuccessHandler(readValidation)
+              .validation('Purchase Order ID', purchaseOrderId.value);
+          }
 
-					return {
-						purchaseOrderId,
-						validationError,
-						searchError,
-						purchaseOrderIdSnapshot,
-						success,
-						loading,
-						handleQuery,
-						purchaseOrderData,
-					};
-				},
-			}).mount('#app');
-		</script>
-	</head>
-	<body class="bg-indigo-50">
-		<div id="app" class="">
-			<div class="h-screen flex flex-col justify-center items-center gap-4">
-				<div>
-					<label :for="purchaseOrderIdInput" class="text-lg ml-1 font-semibold">Purchase Order ID:</label>
-					<input
-						@keyup.enter="handleQuery"
-						v-model="purchaseOrderId"
-						:type="text"
-						:name="purchaseOrderIdInput"
-						class="w-64 h-6 p-4 rounded-lg flex items-center justify-center border-2 border-purple-500 shadow-lg outline-none focus:border-indigo-500" />
-				</div>
-				<button
-					@click="handleQuery"
-					class="p-4 rounded-lg flex items-center justify-center bg-purple-500 shadow-lg text-violet-100 text-xl focus:bg-indigo-500">
-					Run Query
-				</button>
-				<div class="flex flex-col items-center">
-					<div v-if="validationError" class="text-red-500 text-md font-semibold leading-none">
-						{{ purchaseOrderIdSnapshot }} is not a valid purchase order ID.
-					</div>
-					<div v-if="loading" class="text-purple-500 text-md font-semibold leading-none">Loading . . .</div>
-					<div v-if="searchError" class="text-red-500 text-md font-semibold leading-none">{{ purchaseOrderIdSnapshot }} was not found.</div>
-					<div v-if="success" class="text-emerald-500 text-md font-semibold leading-none">{{ purchaseOrderIdSnapshot }} has been retrieved ✓</div>
-				</div>
-				<div class="text-sky-600 font-bold text-lg">{{ purchaseOrderData.coordinates }}</div>
-			</div>
-		</div>
-	</body>
+          return {
+            purchaseOrderId,
+            validationError,
+            searchError,
+            purchaseOrderIdSnapshot,
+            success,
+            loading,
+            handleQuery,
+            purchaseOrderData,
+          };
+        },
+      }).mount('#app');
+    </script>
+  </head>
+  <body class="bg-indigo-50">
+    <div id="app" class="">
+      <div
+        v-if="false"
+        class="h-screen w-screen bg-indigo-50 absolute z-10"
+      ></div>
+      <div class="h-screen flex flex-col justify-center items-center gap-4">
+        <div>
+          <label :for="purchaseOrderIdInput" class="text-lg ml-1 font-semibold"
+            >Purchase Order ID:</label
+          >
+          <input
+            @keyup.enter="handleQuery"
+            v-model="purchaseOrderId"
+            :type="text"
+            :name="purchaseOrderIdInput"
+            class="w-64 h-6 p-4 rounded-lg flex items-center justify-center border-2 border-purple-500 shadow-lg outline-none focus:border-indigo-500"
+          />
+        </div>
+        <button
+          @click="handleQuery"
+          class="p-4 rounded-lg flex items-center justify-center bg-purple-500 shadow-lg text-violet-100 text-xl focus:bg-indigo-500"
+          :disabled="loading"
+        >
+          <div class="lds-ellipsis" v-if="loading">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+          <p v-if="!loading">Run Query</p>
+        </button>
+        <div class="flex flex-col items-center">
+          <div
+            v-if="validationError"
+            class="text-red-500 text-md font-semibold leading-none"
+          >
+            {{ purchaseOrderIdSnapshot }} is not a valid purchase order ID.
+          </div>
+          <div
+            v-if="searchError"
+            class="text-red-500 text-md font-semibold leading-none"
+          >
+            {{ purchaseOrderIdSnapshot }} was not found.
+          </div>
+          <div
+            v-if="success"
+            class="text-emerald-500 text-md font-semibold leading-none"
+          >
+            {{ purchaseOrderIdSnapshot }} has been retrieved ✓
+          </div>
+        </div>
+        <div class="text-sky-600 font-bold text-lg">
+          {{ purchaseOrderData.coordinates }}
+        </div>
+      </div>
+    </div>
+  </body>
 </html>
