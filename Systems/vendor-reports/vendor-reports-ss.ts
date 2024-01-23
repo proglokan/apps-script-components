@@ -1,5 +1,5 @@
 'use strict';
-import { _Headers } from '../../global/global';
+import { getHeaders, _Headers } from "../../global/global";
 interface Entry {
     size: number;
     row: number;

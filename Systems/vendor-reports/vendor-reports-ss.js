@@ -1,4 +1,5 @@
 'use strict';
+import { getHeaders } from "../../global/global";
 // [+] REFERENCE FOR COMPILED FILE
 // 
 // type _Headers = Map<string, number>;
@@ -171,5 +172,4 @@ function vendorReportTrigger() {
     sendUpdate(localSheet, syncedContents, row);
     newLog('vendor-reports-ss', `new report entry on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()} PST`);
 }
-export {};
 //# sourceMappingURL=vendor-reports-ss.js.map
