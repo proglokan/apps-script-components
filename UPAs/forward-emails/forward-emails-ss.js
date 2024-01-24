@@ -13,7 +13,10 @@ function getEmailThreads(query) {
 function forwardMessages(emailThreads, recipient) {
     for (let x = 0; x < emailThreads.length; ++x) {
         const emailThread = emailThreads[x];
-        const message = emailThread.getMessages()[0];
+        const messages = emailThread.getMessages();
+        if (messages.length > 1)
+            continue;
+        const message = messages[0];
         message.forward(recipient);
     }
 }
