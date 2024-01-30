@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <style>
+      .lds-ellipsis {
+        display: inline-block;
+        position: relative;
+        width: 93.58px;
+        height: 28px;
+      }
+      .lds-ellipsis div {
+        position: absolute;
+        top: 10%;
+        width: 1rem;
+        height: 1rem;
+        border-radius: 50%;
+        background: #94a3b8;
+        animation-timing-function: cubic-bezier(0, 1, 1, 0);
+      }
+      .lds-ellipsis div:nth-child(1) {
+        left: 16px;
+        animation: lds-ellipsis1 0.6s infinite;
+      }
+      .lds-ellipsis div:nth-child(2) {
+        left: 16px;
+        animation: lds-ellipsis2 0.6s infinite;
+      }
+      .lds-ellipsis div:nth-child(3) {
+        left: 40px;
+        animation: lds-ellipsis2 0.6s infinite;
+      }
+      .lds-ellipsis div:nth-child(4) {
+        left: 64px;
+        animation: lds-ellipsis3 0.6s infinite;
+      }
+      @keyframes lds-ellipsis1 {
+        0% {
+          transform: scale(0);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+      @keyframes lds-ellipsis3 {
+        0% {
+          transform: scale(1);
+        }
+        100% {
+          transform: scale(0);
+        }
+      }
+      @keyframes lds-ellipsis2 {
+        0% {
+          transform: translate(0, 0);
+        }
+        100% {
+          transform: translate(24px, 0);
+        }
+      }
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
+        }
+      }
+    </script>
+    <script type="module" defer>
+      import { createApp, ref } from "vue";
+      createApp({
+        setup() {
+          const loading = ref(false);
+          const data = ref([
+            {
+              Label: "Input Label ^_~",
+              "Input Type": "text",
+              Required: true,
+              "Default value": "I'm the default value :)",
+              Placeholder: "This should be overwritten",
+              "Target Column Header": "Header name",
+              "Read-only": false,
+              Validation: "^[A-L]{12}$",
+              uniqueIdentifier: "BefGr",
+              userInput: "kljahsdf",
+            },
+          ]);
+
+          function formSubmission() {
+            loading.value = true;
+            console.log(data.value[0].userInput);
+            loading.value = false;
+          }
+
+          return {
+            data,
+            loading,
+            formSubmission,
+          };
+        },
+      }).mount("#app");
+    </script>
+  </head>
+  <body class="bg-indigo-50 w-screen h-screen grid place-items-center">
+    <div id="app" class="">
+      <div v-if="false" class="h-screen w-screen bg-indigo-50 absolute top-0 left-0 z-10"></div>
+      <form @submit.prevent="formSubmission" class="w-full max-w-lg flex flex-col gap-6">
+        <div v-for="config of data">
+          <label class="block uppercase tracking-wide text-slate-500 text-xs font-bold mb-2" for="">{{ config['Label'] }}</label>
+          <input :type="config['Input Type']" :required="config['Required']" :value="config['userInput']" :placeholder="config['Placeholder']" :readonly="config['Read-only']" :pattern="config['Validation']" :key="config['uniqueIdentifier']" :name="config['uniqueIdentifier']" class="h-12 shadow-lg shadow-slate-400 appearance-none block w-full bg-slate-300 text-slate-500 border border-slate-300 rounded py-3 px-4 leading-tight focus:outline-none focus:border-indigo-300" />
+        </div>
+        <div>{{ data[0].userInput }}</div>
+        <div>
+          <button type="submit" class="h-12 shadow-lg shadow-slate-400 appearance-none block w-full bg-slate-300 text-slate-500 border border-slate-300 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:border-indigo-300">
+            <div class="lds-ellipsis" v-if="loading">
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
+            <p v-if="!loading">Submit</p>
+          </button>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>

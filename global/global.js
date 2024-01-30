@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 // * REFERENCE FOR COMPILED FILE
 //
 // type _Headers = Map<string, number>;
@@ -6,9 +6,9 @@
 // type Row = Body[number];
 // type Coordinates<T extends number[]> = T & { length: 4 };
 // @subroutine {Function} Pure: GoogleAppsScript.Spreadsheet.Sheet → fetch a sheet obj from internal and external workbooks
-// @arg {string} id → the ID of the external workbook
-// @arg {string} name → the name of the sheet in the source workbook
-function fetchSheet(id, name) {
+// @arg {string} ssid → the ID of the external spreadsheet
+// @arg {string} sid → the ID of the sheet in the spreadsheet
+function fetchSheet(ssid, sid) {
     const external = (id) => {
         const ss = SpreadsheetApp.openById(id);
         return ss;
@@ -17,11 +17,21 @@ function fetchSheet(id, name) {
         const ss = SpreadsheetApp.getActiveSpreadsheet();
         return ss;
     };
-    const sheet = id
-        ? external(id).getSheetByName(name)
-        : internal().getSheetByName(name);
+    const ss = ssid ? external(ssid) : internal();
+    const searchForSheet = (ss) => {
+        const sheets = ss.getSheets();
+        for (let x = 0; x < sheets.length; ++x) {
+            const sheet = sheets[x];
+            const id = sheet.getSheetId();
+            if (id !== sid)
+                continue;
+            return sheet;
+        }
+        throw new Error(`Sheet ${sid} not found`);
+    };
+    const sheet = ss ? searchForSheet(ss) : null;
     if (sheet === null)
-        throw new Error(`Sheet ${name} not found`);
+        throw new Error(`Sheet ${sid} not found`);
     return sheet;
 }
 // @subroutine {Function} Pure: GoogleAppsScript.Spreadsheet → fetch the user's active sheet from the active workbook
@@ -39,6 +49,11 @@ function getHeaders(sheet) {
     data.forEach((header, index) => headers.set(header, index));
     return headers;
 }
+function getBody(sheet) {
+    const body = sheet.getDataRange().getValues();
+    body.shift();
+    return body;
+}
 // @subroutine {Function} Pure: _Headers, Body → parse the sheet into headers and body
 // @arg {GoogleAppsScript.Spreadsheet.Sheet} sheet → the sheet in the source workbook
 function parseSheet(sheet) {
@@ -51,22 +66,22 @@ function parseSheet(sheet) {
 // @arg {string} input → the user input to validate
 function validation(type, input) {
     switch (type) {
-        case 'Purchase Order ID':
+        case "Purchase Order ID":
             return /^10-\d{5}$/g.test(input);
         default:
             return new Error(`Author Time: ${type} is an invalid case!`);
     }
 }
 function geStartingRow(sheetBody, values) {
-    const target = values[0].join('');
+    const target = values[0].join("");
     for (let x = 0; x < sheetBody.length; ++x) {
         const row = sheetBody[x];
-        const source = row.join('');
+        const source = row.join("");
         if (source === target)
             return x + 1;
     }
     const error = new Error(`Could not find starting for provided values.`);
-    error.name = 'searchError';
+    error.name = "searchError";
     return error;
 }
 // @subroutine {Function} Pure: Coordinates<number[]> → create coordinates based on a column, body of values, and possibly a sheet
@@ -82,8 +97,35 @@ function getCoordinates(sheetBody, values) {
     const valuesCoordinates = [row, 1, upperX, upperY];
     return valuesCoordinates;
 }
+// @subroutine {Function} Pure: MappedSheet → create a map of the sheet
+// @arg {GoogleAppsScript.Spreadsheet.Sheet} sheet → sheet to map
+function sheetToMap(sheet) {
+    const values = sheet.getDataRange().getValues();
+    const mappedSheet = new Map();
+    for (let x = 0; x < values[0].length; ++x) {
+        const header = values[0][x];
+        const columnBody = [];
+        for (let y = 1; y < values.length; ++y)
+            columnBody.push(values[y][x]);
+        mappedSheet.set(header, columnBody);
+    }
+    return mappedSheet;
+}
+// @subroutine {Function} Pure: string → create a random name for config-generated input fields
+function getUniqueIdentifier() {
+    const availableLetters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const lettersOfUniqueIdentifier = [];
+    for (let x = 0; x < 5; ++x) {
+        const randomIndex = Math.floor(Math.random() * availableLetters.length);
+        const randomLetter = availableLetters[randomIndex];
+        lettersOfUniqueIdentifier.push(randomLetter);
+    }
+    const uniqueIdentifier = lettersOfUniqueIdentifier.join('');
+    return uniqueIdentifier;
+}
 function createCoordinates() {
+    // TODO: create coordinates for placing values in a sheet
     return [1, 2, 3, 4];
 }
-export { fetchSheet, fetchActiveSheet, getHeaders, parseSheet, validation, getCoordinates };
+export { fetchSheet, fetchActiveSheet, getHeaders, getBody, parseSheet, validation, getCoordinates, sheetToMap, getUniqueIdentifier, createCoordinates };
 //# sourceMappingURL=global.js.map
