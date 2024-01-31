@@ -7,7 +7,7 @@ function getGlobalConfigSettings(localConfigName: string, globalConfigHeaders: _
   for (let x = 0; x < globalConfigBody.length; ++x) {
     const row = globalConfigBody[x];
     const formNameHeaderIndex = globalConfigHeaders.get('Form name');
-    if (!formNameHeaderIndex) throw new Error(`Form name header not found in global config sheet`);
+    if (formNameHeaderIndex === undefined) throw new Error(`Header 'Form name' not found in global config sheet`);
     const formName = row[formNameHeaderIndex];
     if (formName !== localConfigName) continue;
     return row;
@@ -20,7 +20,7 @@ function getLocalConfigSettings(mappedLocalConfigSheet: MappedSheet): InputConfi
   const localConfigSettings: InputConfigSetting[] = [];
   const entriesIterator = mappedLocalConfigSheet.entries();
   const firstEntry = entriesIterator.next().value;
-  for (let x = 0; x < firstEntry[1]!.length; ++x) localConfigSettings.push({ userInput: '', uniqueIdentifier: '' });
+  for (let x = 0; x < firstEntry[1]!.length; ++x) localConfigSettings.push({ uniqueIdentifier: '' });
   for (const [attribute, settings] of mappedLocalConfigSheet) {
     for (let x = 0; x < settings.length; ++x) {
       const setting = settings[x];

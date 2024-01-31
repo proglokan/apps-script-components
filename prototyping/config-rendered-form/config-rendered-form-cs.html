@@ -78,22 +78,21 @@
           const loading = ref(false);
           const data = ref([
             {
-              Label: "Input Label ^_~",
+              Label: "Input Label",
               "Input Type": "text",
               Required: true,
-              "Default value": "I'm the default value :)",
+              Value: "This is the default value",
               Placeholder: "This should be overwritten",
               "Target Column Header": "Header name",
               "Read-only": false,
               Validation: "^[A-L]{12}$",
               uniqueIdentifier: "BefGr",
-              userInput: "kljahsdf",
             },
           ]);
 
           function formSubmission() {
             loading.value = true;
-            console.log(data.value[0].userInput);
+            console.log(data.value[0].Value);
             loading.value = false;
           }
 
@@ -107,14 +106,13 @@
     </script>
   </head>
   <body class="bg-indigo-50 w-screen h-screen grid place-items-center">
-    <div id="app" class="">
+    <div id="app" class="w-full grid place-items-center">
       <div v-if="false" class="h-screen w-screen bg-indigo-50 absolute top-0 left-0 z-10"></div>
-      <form @submit.prevent="formSubmission" class="w-full max-w-lg flex flex-col gap-6">
+      <form @submit.prevent="formSubmission" class="w-64 flex flex-col gap-6">
         <div v-for="config of data">
           <label class="block uppercase tracking-wide text-slate-500 text-xs font-bold mb-2" for="">{{ config['Label'] }}</label>
-          <input :type="config['Input Type']" :required="config['Required']" :value="config['userInput']" :placeholder="config['Placeholder']" :readonly="config['Read-only']" :pattern="config['Validation']" :key="config['uniqueIdentifier']" :name="config['uniqueIdentifier']" class="h-12 shadow-lg shadow-slate-400 appearance-none block w-full bg-slate-300 text-slate-500 border border-slate-300 rounded py-3 px-4 leading-tight focus:outline-none focus:border-indigo-300" />
+          <input :type="config['Input Type']" :required="config['Required']" v-model="config['Value']" :placeholder="config['Placeholder']" :readonly="config['Read-only']" :pattern="config['Validation']" :key="config['uniqueIdentifier']" :name="config['uniqueIdentifier']" class="h-12 shadow-lg shadow-slate-400 appearance-none block w-full bg-slate-300 text-slate-500 border border-slate-300 rounded py-3 px-4 leading-tight focus:outline-none focus:border-indigo-300" />
         </div>
-        <div>{{ data[0].userInput }}</div>
         <div>
           <button type="submit" class="h-12 shadow-lg shadow-slate-400 appearance-none block w-full bg-slate-300 text-slate-500 border border-slate-300 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:border-indigo-300">
             <div class="lds-ellipsis" v-if="loading">
