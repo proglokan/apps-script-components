@@ -5,8 +5,21 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title></title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+    />
     <style>
+      .v-enter-active,
+      .v-leave-active {
+        transition: opacity 0.3s ease;
+      }
+
+      .v-enter-from,
+      .v-leave-to {
+        opacity: 0;
+      }
+
       .lds-ellipsis {
         display: inline-block;
         position: relative;
@@ -83,61 +96,109 @@
       }
     </script>
     <script type="module" defer>
-      import { createApp, ref } from "vue";
+      import { createApp, ref, onMounted } from 'vue';
       createApp({
         setup() {
           const loading = ref(false);
+          const isBottomOfPage = ref(true);
+
+          onMounted(() => {
+            isBottomOfPage.value =
+              window.scrollY + window.innerHeight + 50 >
+              document.body.scrollHeight;
+            window.addEventListener('scroll', (e) => {
+              if (
+                window.scrollY + window.innerHeight + 50 >
+                document.body.scrollHeight
+              ) {
+                isBottomOfPage.value = true;
+              } else isBottomOfPage.value = false;
+            });
+          });
+
           // const data = JSON.parse(<?= JSON.stringify(localConfigSettings) ?>);
+          // const targetSheet = JSON.parse(<?= JSON.stringify(targetSheet) ?>);
+          // const targetSpreadsheet = JSON.parse(<?= JSON.stringify(targetSpreadsheet) ?>);
           const data = [
             {
-              Label: "First Name",
-              "Input Type": "text",
+              Label: 'First Name',
+              'Input Type': 'text',
               Required: true,
-              Placeholder: "First Name",
-              "Read-only": false,
-              Validation: "^[a-zA-Z]+$",
-              uniqueIdentifier: "first-name",
-              Value: "",
+              Placeholder: 'First Name',
+              'Read-only': false,
+              Validation: '^[a-zA-Z]+$',
+              uniqueIdentifier: 'first-name',
+              Value: '',
             },
             {
-              Label: "Last Name",
-              "Input Type": "text",
+              Label: 'Last Name',
+              'Input Type': 'text',
               Required: true,
-              Placeholder: "Last Name",
-              "Read-only": false,
-              Validation: "^[a-zA-Z]+$",
-              uniqueIdentifier: "last-name",
-              Value: "",
+              Placeholder: 'Last Name',
+              'Read-only': false,
+              Validation: '^[a-zA-Z]+$',
+              uniqueIdentifier: 'last-name',
+              Value: '',
             },
             {
-              Label: "Email",
-              "Input Type": "email",
+              Label: 'Email',
+              'Input Type': 'email',
               Required: true,
-              Placeholder: "Email",
-              "Read-only": false,
-              Validation: "^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$",
-              uniqueIdentifier: "email",
-              Value: "",
+              Placeholder: 'Email',
+              'Read-only': false,
+              Validation: '^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$',
+              uniqueIdentifier: 'email',
+              Value: '',
             },
             {
-              Label: "Phone",
-              "Input Type": "tel",
+              Label: 'Phone',
+              'Input Type': 'tel',
               Required: true,
-              Placeholder: "Phone",
-              "Read-only": false,
-              Validation: "^[0-9]{10}$",
-              uniqueIdentifier: "phone",
-              Value: "",
+              Placeholder: 'Phone',
+              'Read-only': false,
+              Validation: '^[0-9]{10}$',
+              uniqueIdentifier: 'phone',
+              Value: '',
             },
             {
-              Label: "Height",
-              "Input Type": "number",
+              Label: 'Height',
+              'Input Type': 'number',
               Required: true,
-              Placeholder: "Height",
-              "Read-only": false,
-              Validation: "",
-              uniqueIdentifier: "height",
-              Value: "",
+              Placeholder: 'Height',
+              'Read-only': false,
+              Validation: '',
+              uniqueIdentifier: 'height',
+              Value: '',
+            },
+            {
+              Label: 'Email',
+              'Input Type': 'email',
+              Required: true,
+              Placeholder: 'Email',
+              'Read-only': false,
+              Validation: '^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$',
+              uniqueIdentifier: 'email',
+              Value: '',
+            },
+            {
+              Label: 'Phone',
+              'Input Type': 'tel',
+              Required: true,
+              Placeholder: 'Phone',
+              'Read-only': false,
+              Validation: '^[0-9]{10}$',
+              uniqueIdentifier: 'phone',
+              Value: '',
+            },
+            {
+              Label: 'Height',
+              'Input Type': 'number',
+              Required: true,
+              Placeholder: 'Height',
+              'Read-only': false,
+              Validation: '',
+              uniqueIdentifier: 'height',
+              Value: '',
             },
           ];
 
@@ -146,8 +207,12 @@
           }
 
           function scrollToSubmit() {
-            const button = document.querySelector("button");
-            button.scrollIntoView({ behavior: "smooth" });
+            const button = document.querySelector('button');
+            window.scrollTo({
+              left: 0,
+              top: document.body.scrollHeight,
+              behavior: 'smooth',
+            });
           }
 
           function formSubmission() {
@@ -161,24 +226,57 @@
             loading,
             formSubmission,
             scrollToSubmit,
+            isBottomOfPage,
           };
         },
-      }).mount("#app");
+      }).mount('#app');
     </script>
   </head>
   <body class="py-16 bg-indigo-50 w-full h-full grid place-items-center">
     <div id="app" class="w-full grid place-items-center">
-      <div v-if="false" class="h-screen w-screen bg-indigo-50 absolute top-0 left-0 z-10"></div>
-      <div class="w-full h-12 fixed top-0 bg-indigo-50 flex justify-end">
-        <span class="material-symbols-outlined text-5xl text-slate-500 cursor-pointer mr-4" @click="scrollToSubmit"> expand_more </span>
-      </div>
+      <div
+        v-if="false"
+        class="h-screen w-screen bg-indigo-50 absolute top-0 left-0 z-10"
+      ></div>
+      <Transition>
+        <div
+          class="h-14 w-14 fixed bottom-4 right-4 flex justify-center items-center rounded-full bg-indigo-400 shadow-slate-400 shadow-lg"
+          v-if="!isBottomOfPage"
+        >
+          <span
+            class="material-symbols-outlined text-5xl text-indigo-50 cursor-pointer mt-1"
+            @click="scrollToSubmit"
+          >
+            expand_more
+          </span>
+        </div>
+      </Transition>
+
       <form @submit.prevent="formSubmission" class="w-64 flex flex-col gap-6">
         <div v-for="config of data">
-          <label class="block uppercase tracking-wide text-slate-500 text-xs font-bold mb-2" for="">{{ config['Label'] }}</label>
-          <input :type="config['Input Type']" :required="config['Required']" v-model="config['Value']" :placeholder="config['Placeholder']" :readonly="config['Read-only']" :pattern="!!config['Validation'].length ? config['Validation'] : null" :key="config['uniqueIdentifier']" :name="config['uniqueIdentifier']" :step="config['Input Type'] === 'number' ? 'any' : null" class="h-12 shadow-lg shadow-slate-400 appearance-none block w-full bg-slate-300 text-slate-500 border border-slate-300 rounded py-3 px-4 leading-tight focus:outline-none focus:border-indigo-300" />
+          <label
+            class="block uppercase tracking-wide text-slate-500 text-xs font-bold mb-2"
+            for=""
+            >{{ config['Label'] }}</label
+          >
+          <input
+            :type="config['Input Type']"
+            :required="config['Required']"
+            v-model="config['Value']"
+            :placeholder="config['Placeholder']"
+            :readonly="config['Read-only']"
+            :pattern="!!config['Validation'].length ? config['Validation'] : null"
+            :key="config['uniqueIdentifier']"
+            :name="config['uniqueIdentifier']"
+            :step="config['Input Type'] === 'number' ? 'any' : null"
+            class="h-12 shadow-lg shadow-slate-400 appearance-none block w-full bg-slate-300 text-slate-500 border border-slate-300 rounded py-3 px-4 leading-tight focus:outline-none focus:border-indigo-300"
+          />
         </div>
         <div>
-          <button type="submit" class="h-12 shadow-lg shadow-slate-400 appearance-none block w-full bg-slate-300 text-slate-500 border border-slate-300 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:border-indigo-300">
+          <button
+            type="submit"
+            class="h-12 shadow-lg shadow-slate-400 appearance-none block w-full bg-slate-300 text-slate-500 border border-slate-300 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:border-indigo-300"
+          >
             <div class="lds-ellipsis" v-if="loading">
               <div></div>
               <div></div>
