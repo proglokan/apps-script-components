@@ -106,7 +106,7 @@
             isBottomOfPage.value =
               window.scrollY + window.innerHeight + 50 >
               document.body.scrollHeight;
-            window.addEventListener('scroll', (e) => {
+            window.addEventListener('scroll', () => {
               if (
                 window.scrollY + window.innerHeight + 50 >
                 document.body.scrollHeight
@@ -252,7 +252,10 @@
         </div>
       </Transition>
 
-      <form @submit.prevent="formSubmission" class="w-64 flex flex-col gap-6">
+      <form
+        @submit.prevent="formSubmission"
+        class="w-full flex flex-col gap-6 px-4 sm:px-28"
+      >
         <div v-for="config of data">
           <label
             class="block uppercase tracking-wide text-slate-500 text-xs font-bold mb-2"
