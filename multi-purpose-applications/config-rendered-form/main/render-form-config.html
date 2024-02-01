@@ -5,7 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title></title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <style>
       .lds-ellipsis {
         display: inline-block;
@@ -168,17 +170,39 @@
   </head>
   <body class="py-16 bg-indigo-50 w-full h-full grid place-items-center">
     <div id="app" class="w-full grid place-items-center">
-      <div v-if="false" class="h-screen w-screen bg-indigo-50 absolute top-0 left-0 z-10"></div>
+      <div
+        v-if="false"
+        class="h-screen w-screen bg-indigo-50 absolute top-0 left-0 z-10"></div>
       <div class="w-full h-12 fixed top-0 bg-indigo-50 flex justify-end">
-        <span class="material-symbols-outlined text-5xl text-slate-500 cursor-pointer mr-4" @click="scrollToSubmit"> expand_more </span>
+        <span
+          class="material-symbols-outlined text-5xl text-slate-500 cursor-pointer"
+          @click="scrollToSubmit">
+          expand_more
+        </span>
       </div>
       <form @submit.prevent="formSubmission" class="w-64 flex flex-col gap-6">
         <div v-for="config of data">
-          <label class="block uppercase tracking-wide text-slate-500 text-xs font-bold mb-2" for="">{{ config['Label'] }}</label>
-          <input :type="config['Input Type']" :required="config['Required']" v-model="config['Value']" :placeholder="config['Placeholder']" :readonly="config['Read-only']" :pattern="!!config['Validation'].length ? config['Validation'] : null" :key="config['uniqueIdentifier']" :name="config['uniqueIdentifier']" :step="config['Input Type'] === 'number' ? 'any' : null" class="h-12 shadow-lg shadow-slate-400 appearance-none block w-full bg-slate-300 text-slate-500 border border-slate-300 rounded py-3 px-4 leading-tight focus:outline-none focus:border-indigo-300" />
+          <label
+            class="block uppercase tracking-wide text-slate-500 text-xs font-bold mb-2"
+            for=""
+            >{{ config['Label'] }}</label
+          >
+          <input
+            :type="config['Input Type']"
+            :required="config['Required']"
+            v-model="config['Value']"
+            :placeholder="config['Placeholder']"
+            :readonly="config['Read-only']"
+            :pattern="!!config['Validation'].length ? config['Validation'] : null"
+            :key="config['uniqueIdentifier']"
+            :name="config['uniqueIdentifier']"
+            :step="config['Input Type'] === 'number' ? 'any' : null"
+            class="h-12 shadow-lg shadow-slate-400 appearance-none block w-full bg-slate-300 text-slate-500 border border-slate-300 rounded py-3 px-4 leading-tight focus:outline-none focus:border-indigo-300" />
         </div>
         <div>
-          <button type="submit" class="h-12 shadow-lg shadow-slate-400 appearance-none block w-full bg-slate-300 text-slate-500 border border-slate-300 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:border-indigo-300">
+          <button
+            type="submit"
+            class="h-12 shadow-lg shadow-slate-400 appearance-none block w-full bg-slate-300 text-slate-500 border border-slate-300 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:border-indigo-300">
             <div class="lds-ellipsis" v-if="loading">
               <div></div>
               <div></div>
