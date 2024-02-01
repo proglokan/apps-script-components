@@ -1,9 +1,9 @@
 'use strict';
 import { getHeaders, _Headers } from "../../global/global";
 interface Entry {
-    size: number;
-    row: number;
-    report: string;
+  size: number;
+  row: number;
+  report: string;
 }
 
 // [+] REFERENCE FOR COMPILED FILE
@@ -31,18 +31,18 @@ function initToday(localSheet: GoogleAppsScript.Spreadsheet.Sheet): number {
 function getEntryInfo(localSheet: GoogleAppsScript.Spreadsheet.Sheet): Entry {
   const data = localSheet.getDataRange().getValues();
   const entry: Entry = {
-      size: 0,
-      row: -1,
-      report: '[]'
+    size: 0,
+    row: -1,
+    report: '[]'
   };
   for (let x = 1; x < data.length; ++x) {
-      const today = new Date().toLocaleDateString();
-      const [dateString, report] = data[x][0].split('→');
-      const date = new Date(dateString).toLocaleDateString(); 
-      if (date !== today) continue;
-      entry.row = x + 1;
-      entry.report = report;
-      entry.size = JSON.parse(report).length;
+    const today = new Date().toLocaleDateString();
+    const [dateString, report] = data[x][0].split('→');
+    const date = new Date(dateString).toLocaleDateString();
+    if (date !== today) continue;
+    entry.row = x + 1;
+    entry.report = report;
+    entry.size = JSON.parse(report).length;
   }
   if (entry.row === -1) entry.row = initToday(localSheet);
   return entry;
@@ -92,7 +92,7 @@ function isUpdated(size: number, data: string[][], headers: _Headers): boolean {
   const targetColumns = getTargetColumns(headers);
   const coordinates: number[][][] = [];
   for (let x = 1; x < data.length; ++x) {
-    const cell = ''+data[x][column];
+    const cell = '' + data[x][column];
     if (cell === '' || cell.toLowerCase() === 'live inventory') continue;
     const date = new Date(cell).toLocaleDateString();
     if (date !== today) continue;
@@ -122,7 +122,7 @@ function getUpdateContents(data: string[][]): (string | boolean)[][] {
   for (let x = 0; x < coordinates.length; ++x) {
     const subContents: string[] = [];
     for (let y = 0; y < coordinates[x].length; ++y) {
-      const [ row, column ] = coordinates[x][y];
+      const [row, column] = coordinates[x][y];
       let value = data[row][column];
       if (value === '') value = '-';
       subContents.push(value);
@@ -142,14 +142,14 @@ function getUpdateContents(data: string[][]): (string | boolean)[][] {
 function synchronizeContents(report: string, contents: (string | boolean)[][]): (string | boolean)[][] {
   const info: (string | boolean)[][] = JSON.parse(report);
   for (let x = 0; x < contents.length; ++x) {
-      const sourceString = contents[x].slice(0, 5).join('');
-      for (let y = 0; y < info.length; ++y) {
-          const targetString = info[y].slice(0, 5).join('');
-          if (sourceString !== targetString) continue;
-          const lastElement = contents[x].length - 1; 
-          contents[x][lastElement] = info[y][lastElement];
-          break;
-      }
+    const sourceString = contents[x].slice(0, 5).join('');
+    for (let y = 0; y < info.length; ++y) {
+      const targetString = info[y].slice(0, 5).join('');
+      if (sourceString !== targetString) continue;
+      const lastElement = contents[x].length - 1;
+      contents[x][lastElement] = info[y][lastElement];
+      break;
+    }
   }
   return contents;
 }
@@ -170,7 +170,7 @@ function vendorReportTrigger(): void {
   const sheet: GoogleAppsScript.Spreadsheet.Sheet = getSourceSheet();
   const data: string[][] = sheet.getDataRange().getValues();
   const headers: _Headers = getHeaders(sheet);
-  if (!isUpdated(size, data, headers)) return newLog('vendor-reports-ss', `no updates as of ${new Date().toLocaleTimeString()} PST`); 
+  if (!isUpdated(size, data, headers)) return newLog('vendor-reports-ss', `no updates as of ${new Date().toLocaleTimeString()} PST`);
   const contents: (string | boolean)[][] = getUpdateContents(data);
   const syncedContents = synchronizeContents(report, contents);
   sendUpdate(localSheet, syncedContents, row);

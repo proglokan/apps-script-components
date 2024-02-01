@@ -1,5 +1,5 @@
 'use strict';
-import { fetchSheet, sheetToMap, MappedSheet, getHeaders, _Headers, getBody, Body, getUniqueIdentifier } from "../../global/global";
+import { fetchSheet, sheetToMap, MappedSheet, getHeaders, _Headers, getBody, Body, getUniqueIdentifier } from "../../../global/global";
 
 type InputConfigSetting = { [key: string]: string | boolean };
 
@@ -84,14 +84,4 @@ function configRenderedFormMain(form: string, globalConfigID: number) {
   const localConfigSettings: InputConfigSetting[] = getLocalConfigSettings(mappedLocalConfigSheet);
   const htmlOutput: GoogleAppsScript.HTML.HtmlOutput = createHtmlOutput(formName, targetSpreadsheet, targetSheet, renderType, localConfigSettings);
   renderHtmlOutput(htmlOutput, formName, renderType);
-}
-
-function renderForm(form: string) {
-  switch (form) {
-    case 'Warehouse':
-      configRenderedFormMain(form, 132112722);
-      break;
-    default:
-      throw new Error(`Form '${form}' not found`);
-  }
 }
