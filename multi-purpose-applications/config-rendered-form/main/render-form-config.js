@@ -51,7 +51,7 @@ function getLocalConfigSettings(mappedLocalConfigSheet) {
 // @arg {string} formName → the name of the form to render
 // @arg {string | null} targetSpreadsheet → the ID of the target spreadsheet, if applicable
 function createHtmlOutput(formName, targetSpreadsheet, targetSheet, lcSettings) {
-    const template = HtmlService.createTemplateFromFile('config-rendered-form-cs');
+    const template = HtmlService.createTemplateFromFile('render-warehouse-form-cs');
     template.targetSpreadsheet = targetSpreadsheet;
     template.targetSheet = targetSheet;
     template.lcSettings = lcSettings;

@@ -28,7 +28,7 @@ function getTargetRow(targetBody: Body, skuCol: number, targetSku: string): numb
     const row: Row = targetBody[x];
     const sku = row[skuCol];
     if (sku !== targetSku) continue;
-    return x;
+    return x + 2;
   }
   return new Error(`Could not find SKU in target sheet`);
 }
@@ -56,7 +56,8 @@ function updateExistingValues(existingValues: string[], inputData: InputData[], 
 // @arg {number} targetSheetID → the ID of the target sheet
 // @arg {InputData[]} inputData → the data from the form submission
 function handleWarehouseFormSubmission(targetSpreadsheet: string | null, targetSheetID: number, inputData: InputData[]) {
-  const targetSheet: GoogleAppsScript.Spreadsheet.Sheet = fetchSheet(targetSpreadsheet, targetSheetID);
+  const ssid = targetSpreadsheet === 'null' ? null : targetSpreadsheet;
+  const targetSheet: GoogleAppsScript.Spreadsheet.Sheet = fetchSheet(ssid, targetSheetID);
   const targetHeaders: _Headers = getHeaders(targetSheet);
   const targetBody: Body = getBody(targetSheet);
   const skuCol = targetHeaders.get('SKU');
