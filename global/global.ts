@@ -83,24 +83,23 @@ function validation(type: string, input: string): boolean | Error {
   }
 }
 
-function geStartingRow(sheetBody: Body, values: Body): number | Error {
-  const target = values[0].join("");
-  for (let x = 0; x < sheetBody.length; ++x) {
-    const row = sheetBody[x];
-    const source = row.join("");
-    if (source === target) return x + 1;
-  }
-  const error = new Error(`Could not find starting for provided values.`);
-  error.name = "searchError";
-  return error;
-}
-
 // @subroutine {Function} Pure: Coordinates<number[]> → create coordinates based on a column, body of values, and possibly a sheet
 // @arg {GoogleAppsScript.Spreadsheet.Sheet | null} sheet → sheet to get the last row of, or row 2 if null
 // @arg {number} column → starting column
 // @arg {Body} values → body of values
 function getCoordinates(sheetBody: Body, values: Body): Coordinates<number[]> | Error {
-  const row: number | Error = geStartingRow(sheetBody, values);
+  const getStartingRow = (sheetBody: Body, values: Body): number | Error => {
+    const target = values[0].join("");
+    for (let x = 0; x < sheetBody.length; ++x) {
+      const row = sheetBody[x];
+      const source = row.join("");
+      if (source === target) return x + 1;
+    }
+    const error = new Error(`Could not find starting for provided values.`);
+    error.name = "searchError";
+    return error;
+  }
+  const row: number | Error = getStartingRow(sheetBody, values);
   if (row instanceof Error) return row;
   const upperX = values.length;
   const upperY = values[0].length;
