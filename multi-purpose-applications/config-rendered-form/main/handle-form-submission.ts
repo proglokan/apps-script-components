@@ -1,3 +1,4 @@
+import { fetchSheet, getHeaders, _Headers, getBody, Body } from "../../../global/global";
 function sendData(data) {
   const targetSheetID = 979338720;
   const targetSheet = fetchSheet(null, targetSheetID);

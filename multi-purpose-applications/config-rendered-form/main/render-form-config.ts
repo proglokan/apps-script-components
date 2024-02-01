@@ -51,7 +51,7 @@ function createHtmlOutput(formName: string, targetSpreadsheet: number | null, ta
   template.targetSheet = targetSheet;
   template.localConfigSettings = localConfigSettings;
   const htmlOutput: GoogleAppsScript.HTML.HtmlOutput = template.evaluate();
-  if (renderType !== 'Sidebar') htmlOutput.setTitle(formName);
+  htmlOutput.setTitle(`${new Date().toLocaleDateString()} - ${formName} Form`);
   return htmlOutput;
 }
 
