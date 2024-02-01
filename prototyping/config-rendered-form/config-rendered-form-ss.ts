@@ -3,6 +3,19 @@ import { fetchSheet, sheetToMap, MappedSheet, getHeaders, _Headers, getBody, Bod
 
 type InputConfigSetting = { [key: string]: string | boolean };
 
+function getLocalConfigID(form: string, globalConfigHeaders: _Headers, globalConfigBody: Body): number {
+  const formNameHeaderIndex = globalConfigHeaders.get('Form name');
+  if (formNameHeaderIndex === undefined) throw new Error(`Header 'Form name' not found in global config sheet`);
+  for (let x = 0; x < globalConfigBody.length; ++x) {
+    const row = globalConfigBody[x];
+    if (row[formNameHeaderIndex] !== form) continue;
+    const localConfigIDHeaderIndex = globalConfigHeaders.get('Config Sheet');
+    if (localConfigIDHeaderIndex === undefined) throw new Error(`Header 'Config Sheet' not found in global config sheet`);
+    return +row[localConfigIDHeaderIndex];
+  }
+  throw new Error(`Form ${form} not found in global config sheet`);
+}
+
 function getGlobalConfigSettings(localConfigName: string, globalConfigHeaders: _Headers, globalConfigBody: Body): (string | number)[] {
   for (let x = 0; x < globalConfigBody.length; ++x) {
     const row = globalConfigBody[x];
@@ -57,11 +70,11 @@ function renderHtmlOutput(htmlOutput: GoogleAppsScript.HTML.HtmlOutput, formName
   }
 }
 
-function configRenderedFormMain(localConfigID: number) {
-  const globalConfigID = 122198608;
+function configRenderedFormMain(form: string, globalConfigID: number) {
   const globalConfigSheet: GoogleAppsScript.Spreadsheet.Sheet = fetchSheet(null, globalConfigID);
   const globalConfigHeaders: _Headers = getHeaders(globalConfigSheet);
   const globalConfigBody: Body = getBody(globalConfigSheet);
+  const localConfigID = getLocalConfigID(form, globalConfigHeaders, globalConfigBody);
   const localConfigSheet = fetchSheet(null, localConfigID);
   const localConfigSheetName = localConfigSheet.getSheetName();
   const mappedLocalConfigSheet: MappedSheet = sheetToMap(localConfigSheet);
@@ -76,9 +89,9 @@ function configRenderedFormMain(localConfigID: number) {
 function renderForm(form: string) {
   switch (form) {
     case 'Warehouse':
-      configRenderedFormMain(1671426150);
+      configRenderedFormMain(form, 132112722);
       break;
-    case 'Accounting':
-      break;
+    default:
+      throw new Error(`Form '${form}' not found`);
   }
 }

@@ -62,6 +62,22 @@
           transform: translate(24px, 0);
         }
       }
+      /* For Webkit (Safari, Chrome, etc.) */
+      ::-webkit-scrollbar {
+        width: 0.5rem; /* Width of the scrollbar */
+      }
+
+      /* For Webkit (Safari, Chrome, etc.) */
+      ::-webkit-scrollbar-track {
+        background-color: #eef2ff;
+        border-radius: 10px; /* Border radius */
+      }
+
+      /* For Webkit (Safari, Chrome, etc.) */
+      ::-webkit-scrollbar-thumb {
+        background: #94a3b8; /* Thumb color */
+        border-radius: 10px; /* Border radius */
+      }
     </style>
     <script src="https://cdn.tailwindcss.com"></script>
     <script type="importmap">
@@ -76,42 +92,95 @@
       createApp({
         setup() {
           const loading = ref(false);
-          const data = ref([
+          // const data = JSON.parse(<?= JSON.stringify(localConfigSettings) ?>);
+          const data = [
             {
-              Label: "Input Label",
+              Label: "First Name",
               "Input Type": "text",
               Required: true,
-              Value: "This is the default value",
-              Placeholder: "This should be overwritten",
-              "Target Column Header": "Header name",
+              Placeholder: "First Name",
               "Read-only": false,
-              Validation: "^[A-L]{12}$",
-              uniqueIdentifier: "BefGr",
+              Validation: "^[a-zA-Z]+$",
+              uniqueIdentifier: "first-name",
+              Value: "",
             },
-          ]);
+            {
+              Label: "Last Name",
+              "Input Type": "text",
+              Required: true,
+              Placeholder: "Last Name",
+              "Read-only": false,
+              Validation: "^[a-zA-Z]+$",
+              uniqueIdentifier: "last-name",
+              Value: "",
+            },
+            {
+              Label: "Email",
+              "Input Type": "email",
+              Required: true,
+              Placeholder: "Email",
+              "Read-only": false,
+              Validation: "^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$",
+              uniqueIdentifier: "email",
+              Value: "",
+            },
+            {
+              Label: "Phone",
+              "Input Type": "tel",
+              Required: true,
+              Placeholder: "Phone",
+              "Read-only": false,
+              Validation: "^[0-9]{10}$",
+              uniqueIdentifier: "phone",
+              Value: "",
+            },
+            {
+              Label: "Height",
+              "Input Type": "number",
+              Required: true,
+              Placeholder: "Height",
+              "Read-only": false,
+              Validation: "",
+              uniqueIdentifier: "height",
+              Value: "",
+            },
+          ];
+
+          function disableLoading() {
+            loading.value = false;
+          }
+
+          function scrollToSubmit() {
+            const button = document.querySelector("button");
+            button.scrollIntoView({ behavior: "smooth" });
+          }
 
           function formSubmission() {
             loading.value = true;
-            console.log(data.value[0].Value);
-            loading.value = false;
+            scrollToSubmit();
+            google.script.run.withSuccessHandler(disableLoading).sendData(data);
           }
 
           return {
             data,
             loading,
             formSubmission,
+            scrollToSubmit,
           };
         },
       }).mount("#app");
     </script>
   </head>
-  <body class="bg-indigo-50 w-screen h-screen grid place-items-center">
+  <body class="py-16 bg-indigo-50 w-full h-full grid place-items-center">
     <div id="app" class="w-full grid place-items-center">
       <div v-if="false" class="h-screen w-screen bg-indigo-50 absolute top-0 left-0 z-10"></div>
+      <div class="w-full h-12 fixed top-0 bg-indigo-50 flex justify-end">
+        <span class="material-symbols-outlined text-5xl text-slate-500 cursor-pointer mr-4" @click="scrollToSubmit"> expand_more </span>
+      </div>
       <form @submit.prevent="formSubmission" class="w-64 flex flex-col gap-6">
         <div v-for="config of data">
           <label class="block uppercase tracking-wide text-slate-500 text-xs font-bold mb-2" for="">{{ config['Label'] }}</label>
-          <input :type="config['Input Type']" :required="config['Required']" v-model="config['Value']" :placeholder="config['Placeholder']" :readonly="config['Read-only']" :pattern="config['Validation']" :key="config['uniqueIdentifier']" :name="config['uniqueIdentifier']" class="h-12 shadow-lg shadow-slate-400 appearance-none block w-full bg-slate-300 text-slate-500 border border-slate-300 rounded py-3 px-4 leading-tight focus:outline-none focus:border-indigo-300" />
+          <input :type="config['Input Type']" :required="config['Required']" v-model="config['Value']" :placeholder="config['Placeholder']" :readonly="config['Read-only']" :pattern="!!config['Validation'].length ? config['Validation'] : null" :key="config['uniqueIdentifier']" :name="config['uniqueIdentifier']" :step="config['Input Type'] === 'number' ? 'any' : null" class="h-12 shadow-lg shadow-slate-400 appearance-none block w-full bg-slate-300 text-slate-500 border border-slate-300 rounded py-3 px-4 leading-tight focus:outline-none focus:border-indigo-300" />
         </div>
         <div>
           <button type="submit" class="h-12 shadow-lg shadow-slate-400 appearance-none block w-full bg-slate-300 text-slate-500 border border-slate-300 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:border-indigo-300">
