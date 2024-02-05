@@ -43,6 +43,15 @@
       <div
         v-if="false"
         class="h-screen w-screen bg-indigo-50 absolute top-0 left-0 z-10"></div>
+      <div>
+        <label
+          class="block uppercase tracking-wide text-slate-500 text-xs font-bold mb-2"
+          for=""
+          >Label</label
+        >
+        <input
+          class="h-12 shadow-lg shadow-slate-400 appearance-none block w-full bg-slate-300 text-slate-500 border border-slate-300 rounded py-3 px-4 leading-tight focus:outline-none focus:border-indigo-300" />
+      </div>
     </div>
   </body>
 </html>

@@ -114,6 +114,70 @@
               } else isBottomOfPage.value = false;
             });
           });
+          const targetSheet = "Warehouse";
+          const targetSpreadsheet = "Warehouse Management";
+          const inputData = [
+            {
+              Label: "Warehouse ID",
+              "Input Type": "text",
+              Required: true,
+              Placeholder: "Ex. PZPG12345",
+              "Read-only": false,
+              Validation: "^PZPG[0-9]{5}$",
+              uniqueIdentifier: "warehouseName",
+              Value: "",
+            },
+            {
+              Label: "Warehouse Address",
+              "Input Type": "text",
+              Required: true,
+              Placeholder: "Warehouse Address",
+              "Read-only": false,
+              Validation: "^\\d{1,5}\\s[A-Za-z]+\\s?(?:[A-Za-z]+\\s?)?$",
+              uniqueIdentifier: "warehouseAddress",
+              Value: "",
+            },
+            {
+              Label: "Warehouse City",
+              "Input Type": "text",
+              Required: true,
+              Placeholder: "Warehouse City",
+              "Read-only": false,
+              Validation: "",
+              uniqueIdentifier: "warehouseCity",
+              Value: "",
+            },
+            {
+              Label: "Warehouse State",
+              "Input Type": "text",
+              Required: true,
+              Placeholder: "Abbreviation of State",
+              "Read-only": false,
+              Validation: "^([A-Z]{2})$",
+              uniqueIdentifier: "warehouseState",
+              Value: "",
+            },
+            {
+              Label: "Warehouse Country",
+              "Input Type": "text",
+              Required: true,
+              Placeholder: "",
+              "Read-only": true,
+              Validation: "",
+              uniqueIdentifier: "warehouseCountry",
+              Value: "United States",
+            },
+            {
+              Label: "Warehouse Zip",
+              "Input Type": "number",
+              Required: true,
+              Placeholder: "Warehouse Zip",
+              "Read-only": false,
+              Validation: "^[0-9]{5}(?:-[0-9]{4})?$",
+              uniqueIdentifier: "warehouseZip",
+              Value: "",
+            },
+          ];
 
           // const inputData = JSON.parse(<?= JSON.stringify(lcSettings) ?>);
           // const targetSheet = JSON.parse(<?= JSON.stringify(targetSheet) ?>);
@@ -132,16 +196,25 @@
             });
           }
 
+          // function formSubmission() {
+          //   loading.value = true;
+          //   scrollToSubmit();
+          //   google.script.run
+          //     .withSuccessHandler(disableLoading)
+          //     .handleWarehouseFormSubmission(
+          //       targetSpreadsheet,
+          //       targetSheet,
+          //       inputData
+          //     );
+          // }
+
           function formSubmission() {
             loading.value = true;
             scrollToSubmit();
-            google.script.run
-              .withSuccessHandler(disableLoading)
-              .handleWarehouseFormSubmission(
-                targetSpreadsheet,
-                targetSheet,
-                inputData
-              );
+            console.log(inputData);
+            setTimeout(() => {
+              disableLoading();
+            }, 2000);
           }
 
           return {
@@ -180,7 +253,7 @@
           <label
             class="block uppercase tracking-wide text-slate-500 text-xs font-bold mb-2"
             for=""
-            >{{ config['Label'] }}</label
+            >{{ config['Label'] }}{{ config['Required'] ? ' *' : '' }}</label
           >
           <input
             :type="config['Input Type']"
