@@ -32,7 +32,7 @@
     <script type="module" defer>
       import { createApp, ref } from "vue";
 
-      createApp({
+      const app = createApp({
         setup() {
           const dataStructure = ref([
             {
@@ -84,7 +84,7 @@
             balance: 0,
             stores: [],
           });
-          
+
           const newStore = ref({
             id: 0,
             inventory: [],
@@ -116,31 +116,67 @@
             addEntry,
           };
         },
-      }).mount("#app");
+      });
+
+      app.component("example", {
+        props: ["id", "sales", "profitSplit"],
+        template: `
+        <div class="w-full max-w-lg bg-white rounded-lg shadow-lg flex flex-col gap-4 p-8">
+          <div>
+            <label for="id" class="block text-sm font-medium text-gray-700">
+              ID:
+            </label>
+            <input
+              type="text"
+              v-model="id"
+              id="id"
+              name="id"
+              class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+          </div>
+          <div>
+            <label for="sales" class="block text-sm font-medium text-gray-700">
+              Sales:
+            </label>
+            <input
+              type="text"
+              v-model="sales"
+              id="sales"
+              name="sales"
+              class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+          </div>
+          <div>
+            <label for="profitSplit" class="block text-sm font-medium text-gray-700">
+              Profit split:
+            </label>
+            <input
+              type="text"
+              v-model="profitSplit"
+              id="profitSplit"
+              name="profitSplit"
+              class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+          </div>
+        </div>
+        `,
+      });
+      app.mount("#app");
     </script>
   </head>
   <body class="bg-indigo-50 h-screen grid place-items-center">
-    <div id="app" class="py-16">
+    <div id="app" class="flex flex-col gap-8 py-16">
+      <example
+        :id="newStore.id"
+        :sales="newStore.sales"
+        :profitSplit="newStore.profitSplit"></example>
+      {{ newStore }}
       <div
         v-if="false"
         class="h-screen w-screen bg-indigo-50 absolute top-0 left-0 z-10"></div>
-      <div>
-        <select
-          name=""
-          class="bg-indigo-600 text-white py-2 px-2 rounded-md hover:bg-indigo-700">
-          <option value="">Select a client</option>
-          <option
-            v-for="entry in dataStructure"
-            :key="entry.name"
-            :value="entry.name">
-            {{ entry.name }}
-          </option>
-        </select>
-      </div>
-      <div class="w-full max-w-lg bg-white rounded-lg shadow-lg p-8">
-        <h2 class="text-xl font-semibold mb-4">Add new client entry</h2>
-        <div class="mb-4">
-          <label for="name" class="block text-sm font-medium text-gray-700"></label>
+      <div></div>
+      <div
+        class="w-full max-w-lg bg-white rounded-lg shadow-lg flex flex-col gap-4 p-8">
+        <h2 class="text-xl font-semibold">Add new client entry</h2>
+        <div class="">
+          <label for="name" class="block text-sm font-medium text-gray-700">
             Name:
           </label>
           <input
@@ -150,7 +186,7 @@
             name="name"
             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
         </div>
-        <div class="mb-4">
+        <div class="">
           <label
             for="workingCapitalLimit"
             class="block text-sm font-medium text-gray-700">
@@ -163,7 +199,7 @@
             name="workingCapitalLimit"
             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
         </div>
-        <div class="mb-4">
+        <div class="">
           <label for="balance" class="block text-sm font-medium text-gray-700">
             Balance:
           </label>
@@ -175,19 +211,33 @@
             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
         </div>
 
-        <h2 class="text-xl font-semibold mb-4">Add store to client entry</h2>
-        
+        <h2 class="text-xl font-semibold">Add store to client entry</h2>
+
         <button
           @click="addEntry"
           class="bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700">
           Add Entry
         </button>
+      </div>
+
+      <div
+        class="w-full max-w-lg bg-white rounded-lg shadow-lg flex flex-col gap-4 p-8">
         <div class="mt-4 max-w-full overflow-hidden">
-          <pre>
-            {{ JSON.stringify(dataStructure, null, 1) }}
-          </pre>
+          <pre class="">{{ JSON.stringify(dataStructure, null, 1) }}</pre>
         </div>
       </div>
+
+      <!-- <select
+        name=""
+        class="bg-indigo-600 text-white py-2 px-2 rounded-md hover:bg-indigo-700">
+        <option value="">Select a client</option>
+        <option
+          v-for="entry in dataStructure"
+          :key="entry.name"
+          :value="entry.name">
+          {{ entry.name }}
+        </option>
+      </select> -->
     </div>
   </body>
 </html>
