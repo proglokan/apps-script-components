@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Parse Source Correct Export</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
+        }
+      }
+    </script>
+    <script type="module" defer>
+      import { createApp, ref } from 'vue';
+      createApp({
+        setup() {
+          function serverResponse(response) {
+            console.log(response);
+          }
+
+          function parseCSV(e) {
+            const file = e.target.files?.[0] ?? null;
+            const reader = new FileReader();
+            reader.readAsText(file);
+            reader.onload = () => {
+              const rows = reader.result.split('\r\n');
+              const csvArray = rows.map(function (row) {
+                return row.split(',');
+              });
+              google.script.run
+                .withSuccessHandler(serverResponse(response))
+                .handleExportedPurchaseOrder(csvArray);
+            };
+          }
+          return { parseCSV };
+        },
+      }).mount('#app');
+    </script>
+  </head>
+  <body class="bg-indigo-50 w-screen h-screen grid place-items-center">
+    <div id="app" class="">
+      <div
+        v-if="false"
+        class="h-screen w-screen bg-indigo-50 absolute top-0 left-0 z-10"
+      ></div>
+      <form class="flex items-center space-x-6">
+        <label class="block">
+          <span class="sr-only"></span>
+          <input
+            @change="parseCSV"
+            accept=".csv"
+            type="file"
+            class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100"
+          />
+        </label>
+      </form>
+    </div>
+  </body>
+</html>
