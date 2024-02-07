@@ -4,10 +4,11 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title></title>
+    <title>Profitzon Create Form</title>
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+    />
     <script src="https://cdn.tailwindcss.com"></script>
     <script type="importmap">
       {
@@ -30,214 +31,158 @@
       }
     </style>
     <script type="module" defer>
-      import { createApp, ref } from "vue";
+      import { createApp, ref } from 'vue';
 
       const app = createApp({
         setup() {
-          const dataStructure = ref([
-            {
-              name: "Client Name",
-              workingCapitalLimit: 100,
-              balance: 70,
-              stores: [
-                {
-                  id: 1,
-                  inventory: [
-                    {
-                      asin: "B00XWZLJ32",
-                      name: "Corelle Square Simple Lines 10.25” Dinner Plate (Set of 4)",
-                      price: 27.98,
-                    },
-                    {
-                      asin: "B00GY4AIJ4",
-                      name: '4-3/4"WHT Dip Mini Dish (Pack of 6)',
-                      price: 32.2,
-                    },
-                  ],
-                  sales: 3000,
-                  profitSplit: 0.5,
-                },
-                {
-                  id: 2,
-                  inventory: [
-                    {
-                      asin: "B07H8Q3J9Y",
-                      name: "Amazon Echo (3rd generation)",
-                      price: 99.99,
-                    },
-                    {
-                      asin: "B07H8Q4GHL",
-                      name: "Amazon Alexa (2nd generation)",
-                      price: 199.99,
-                    },
-                  ],
-                  sales: 400,
-                  profitSplit: 0.5,
-                },
-              ],
-            },
-          ]);
-
-          const newEntry = ref({
-            name: "",
-            workingCapitalLimit: 0,
-            balance: 0,
+          const data = ref([]);
+          const formEntry = ref({
+            name: '',
+            workingCapitalLimit: undefined,
+            balance: undefined,
             stores: [],
           });
-
-          const newStore = ref({
-            id: 0,
+          const storeEntry = ref({
             inventory: [],
-            sales: 0,
-            profitSplit: 0,
+            sales: undefined,
+            profitSplit: undefined,
           });
-
-          const newInventoryEntry = ref({
-            asin: "",
-            name: "",
-            price: 0,
+          const inventoryEntry = ref({
+            asin: '',
+            name: '',
+            price: undefined,
           });
+          const isStoreFormOpen = ref(false);
+          const isInventoryFormOpen = ref(false);
 
-          const addEntry = () => {
-            dataStructure.value.push({ ...newEntry.value });
-            newEntry.value = {
-              name: "",
-              workingCapitalLimit: 0,
-              balance: 0,
+          function addFormEntry() {
+            data.value = [...data.value, formEntry.value];
+            formEntry.value = {
+              name: '',
+              workingCapitalLimit: undefined,
+              balance: undefined,
               stores: [],
             };
-          };
+          }
+
+          function addStore() {
+            isStoreFormOpen.value = true;
+          }
+
+          function updateStore() {
+            formEntry.value.stores = [
+              ...formEntry.value.stores,
+              storeEntry.value,
+            ];
+            storeEntry.value = {
+              inventory: [],
+              sales: undefined,
+              profitSplit: undefined,
+            };
+            isStoreFormOpen.value = false;
+            console.log(formEntry.value);
+          }
+
+          function addInventory() {
+            isInventoryFormOpen.value = true;
+          }
+
+          function updateInventory() {
+            storeEntry.value.inventory = [
+              ...storeEntry.value.inventory,
+              inventoryEntry.value,
+            ];
+            inventoryEntry.value = {
+              asin: '',
+              name: '',
+              price: undefined,
+            };
+            isInventoryFormOpen.value = false;
+          }
 
           return {
-            dataStructure,
-            newEntry,
-            newStore,
-            newInventoryEntry,
-            addEntry,
+            data,
+            formEntry,
+            storeEntry,
+            inventoryEntry,
+            isStoreFormOpen,
+            isInventoryFormOpen,
+            addFormEntry,
+            addStore,
+            updateStore,
+            addInventory,
+            updateInventory,
           };
         },
       });
-
-      app.component("example", {
-        props: ["id", "sales", "profitSplit"],
-        template: `
-        <div class="w-full max-w-lg bg-white rounded-lg shadow-lg flex flex-col gap-4 p-8">
-          <div>
-            <label for="id" class="block text-sm font-medium text-gray-700">
-              ID:
-            </label>
-            <input
-              type="text"
-              v-model="id"
-              id="id"
-              name="id"
-              class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-          </div>
-          <div>
-            <label for="sales" class="block text-sm font-medium text-gray-700">
-              Sales:
-            </label>
-            <input
-              type="text"
-              v-model="sales"
-              id="sales"
-              name="sales"
-              class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-          </div>
-          <div>
-            <label for="profitSplit" class="block text-sm font-medium text-gray-700">
-              Profit split:
-            </label>
-            <input
-              type="text"
-              v-model="profitSplit"
-              id="profitSplit"
-              name="profitSplit"
-              class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-          </div>
-        </div>
-        `,
-      });
-      app.mount("#app");
+      app.mount('#app');
     </script>
   </head>
   <body class="bg-indigo-50 h-screen grid place-items-center">
     <div id="app" class="flex flex-col gap-8 py-16">
-      <example
-        :id="newStore.id"
-        :sales="newStore.sales"
-        :profitSplit="newStore.profitSplit"></example>
-      {{ newStore }}
       <div
         v-if="false"
-        class="h-screen w-screen bg-indigo-50 absolute top-0 left-0 z-10"></div>
-      <div></div>
+        class="h-screen w-screen bg-indigo-50 absolute top-0 left-0 z-10"
+      ></div>
       <div
-        class="w-full max-w-lg bg-white rounded-lg shadow-lg flex flex-col gap-4 p-8">
+        class="w-full max-w-lg bg-white rounded-lg shadow-lg flex flex-col gap-4 p-8"
+      >
         <h2 class="text-xl font-semibold">Add new client entry</h2>
-        <div class="">
-          <label for="name" class="block text-sm font-medium text-gray-700">
-            Name:
-          </label>
-          <input
-            type="text"
-            v-model="newEntry.name"
-            id="name"
-            name="name"
-            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-        </div>
-        <div class="">
-          <label
-            for="workingCapitalLimit"
-            class="block text-sm font-medium text-gray-700">
-            Working Capital Limit:
-          </label>
+        <div class="flex flex-col">
+          <input type="text" v-model="formEntry.name" placeholder="Name" />
           <input
             type="number"
-            v-model="newEntry.workingCapitalLimit"
-            id="workingCapitalLimit"
-            name="workingCapitalLimit"
-            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-        </div>
-        <div class="">
-          <label for="balance" class="block text-sm font-medium text-gray-700">
-            Balance:
-          </label>
+            v-model="formEntry.workingCapitalLimit"
+            placeholder="Working Capital Limit"
+          />
           <input
             type="number"
-            v-model="newEntry.balance"
-            id="balance"
-            name="balance"
-            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+            v-model="formEntry.balance"
+            placeholder="Balance"
+          />
+          <button @click="addStore" v-if="!isStoreFormOpen">Add Store</button>
         </div>
-
-        <h2 class="text-xl font-semibold">Add store to client entry</h2>
+        <div v-if="isStoreFormOpen" class="flex flex-col">
+          <h2 class="text-xl font-semibold">Add store to client entry</h2>
+          <input type="number" v-model="storeEntry.sales" placeholder="Sales" />
+          <input
+            type="number"
+            v-model="storeEntry.profitSplit"
+            placeholder="Profit Split"
+          />
+          <button @click="addInventory" v-if="!isInventoryFormOpen">
+            Add Inventory Item
+          </button>
+          <button @click="updateStore" v-if="!isInventoryFormOpen">
+            Update Store
+          </button>
+        </div>
+        <div v-if="isInventoryFormOpen" class="flex flex-col">
+          <h2 class="text-xl font-semibold">Add inventory to store</h2>
+          <input type="text" v-model="inventoryEntry.asin" placeholder="ASIN" />
+          <input type="text" v-model="inventoryEntry.name" placeholder="Name" />
+          <input
+            type="number"
+            v-model="inventoryEntry.price"
+            placeholder="Price"
+          />
+          <button @click="updateInventory">Update Inventory</button>
+        </div>
 
         <button
-          @click="addEntry"
-          class="bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700">
+          class="bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700"
+          @click="addFormEntry"
+        >
           Add Entry
         </button>
-      </div>
-
-      <div
-        class="w-full max-w-lg bg-white rounded-lg shadow-lg flex flex-col gap-4 p-8">
-        <div class="mt-4 max-w-full overflow-hidden">
-          <pre class="">{{ JSON.stringify(dataStructure, null, 1) }}</pre>
+        <div
+          class="w-full max-w-lg bg-white rounded-lg shadow-lg flex flex-col gap-4 p-8"
+        >
+          <div class="mt-4 max-w-full overflow-hidden">
+            <pre class="">{{ JSON.stringify(data, null, 1) }}</pre>
+          </div>
         </div>
       </div>
-
-      <!-- <select
-        name=""
-        class="bg-indigo-600 text-white py-2 px-2 rounded-md hover:bg-indigo-700">
-        <option value="">Select a client</option>
-        <option
-          v-for="entry in dataStructure"
-          :key="entry.name"
-          :value="entry.name">
-          {{ entry.name }}
-        </option>
-      </select> -->
     </div>
   </body>
 </html>
