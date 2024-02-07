@@ -128,7 +128,6 @@ function findOutOfPlaceIds(data: string[][]): { outOfPlaceIds: string[], outOfPl
   const outOfPlaceIds: string[] = [];
   const outOfPlacePositions: number[] = [];
 
-  // Count occurrences and track positions of each ID
   for (let x = 0; x < data.length; ++x) {
     const id = data[x][0];
     if (!idCountMap.has(id)) {
@@ -137,7 +136,6 @@ function findOutOfPlaceIds(data: string[][]): { outOfPlaceIds: string[], outOfPl
     idCountMap.get(id)?.push(x);
   };
 
-  // Check for out of place IDs and their positions
   for (const [id, positions] of idCountMap) {
     if (positions.length > 1) {
       for (let i = 0; i < positions.length - 1; i++) {
