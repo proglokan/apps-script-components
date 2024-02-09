@@ -4,8 +4,14 @@ SpreadsheetApp.getUi().createMenu('Forms')
   .addItem('Warehouse', 'renderWarehouseForm')
   .addToUi();
 
+// @subroutine {Function} Pure: number → return the global configuration ID
+function globalConfigID(): number {
+  return 132112722;
+}
+
+// @subroutine {Procedure} Void → define the form name and global configuration ID at author time and pass it to the respective helper function
 function renderWarehouseForm() {
   const form = 'Warehouse';
-  const gcID = 132112722;
+  const gcID = globalConfigID();
   configRenderedFormMain(form, gcID);
 }
