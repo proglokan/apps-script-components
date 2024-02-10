@@ -16,7 +16,7 @@ async function decryptData(encryptedData: ArrayBuffer, key: CryptoKey): Promise<
   );
 
   // Data to encrypt
-  const data = new TextEncoder().encode('Hello, world!');
+  const data = new TextEncoder().encode('Hello, world!'); //?
 
   // Encrypt the data
   const encryptedData = await encryptData(data, key);
