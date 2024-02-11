@@ -62,7 +62,10 @@
         }
       }
     </style>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+    />
     <script src="https://cdn.tailwindcss.com"></script>
     <script type="importmap">
       {
@@ -72,27 +75,48 @@
       }
     </script>
     <script type="module" defer>
-      import { createApp, ref } from "vue";
+      import { createApp, ref } from 'vue';
       createApp({
         setup() {
-          const purchaseOrderId = ref("");
+          const sheetIDs = [
+            { id: 914981809, name: 'RFQ-PO' },
+            { id: 1844782191, name: 'APO-WH' },
+            { id: 1173035010, name: 'APO-Amz' },
+            { id: 979338720, name: 'Inbound/Outbound' },
+            { id: 405272581, name: 'Outbound Shipped' },
+            { id: 370348147, name: 'RIPO' },
+          ];
+
+          function getSheetOptions() {
+            const activeSheetID = sheet.getSheetId();
+            return sheetIDs.filter((sheetID) => sheetID !== activeSheetID);
+          }
+
+          const sheetOptions = getSheetOptions();
+
+          const purchaseOrderId = ref('');
           const validationError = ref(false);
           const searchError = ref(false);
           const success = ref(false);
           const loading = ref(false);
-          const purchaseOrderIdSnapshot = ref("");
+          const purchaseOrderIdSnapshot = ref('');
           const purchaseOrderData = ref({});
           const isInvisible = ref(true);
-          const movePurchaseOrderTargetSheet = ref("");
+          const movePurchaseOrderTargetSheet = ref('');
+          const poOptionButtonsVisible = ref(false);
 
           function movePurchaseOrder() {
             const body = purchaseOrderData.value.body;
             const coordinates = purchaseOrderData.value.coordinates;
-            google.script.run.movePurchaseOrderMain(movePurchaseOrderTargetSheet, body, coordinates);
+            google.script.run.movePurchaseOrderMain(
+              movePurchaseOrderTargetSheet,
+              body,
+              coordinates
+            );
           }
 
           function reset() {
-            purchaseOrderId.value = "";
+            purchaseOrderId.value = '';
             error.value = false;
             success.value = false;
           }
@@ -101,7 +125,7 @@
             searchError.value = false;
             validationError.value = false;
             success.value = false;
-            isInvisible.value = true;
+            poOptionButtonsVisible.value = false;
           }
 
           function handleFetchResult(response) {
@@ -125,7 +149,7 @@
               purchaseOrderData.value.body = body;
               purchaseOrderData.value.coordinates = coordinates;
               success.value = true;
-              setTimeout(() => (isInvisible.value = false), 300);
+              poOptionButtonsVisible.value = true;
               return;
             }
           }
@@ -140,14 +164,19 @@
               validationError.value = true;
               return;
             }
-            google.script.run.withSuccessHandler(handleFetchResult).handleQueryMain(purchaseOrderId.value);
+            google.script.run
+              .withSuccessHandler(handleFetchResult)
+              .handleQueryMain(purchaseOrderId.value);
           }
 
           function handleQuery() {
             if (loading.value) return;
             setFlags();
             loading.value = true;
-            google.script.run.withSuccessHandler(readValidation).validation("Purchase Order ID", purchaseOrderId.value);
+            google.script.run
+              .withSuccessHandler(readValidation)
+              .validation('Purchase Order ID', purchaseOrderId.value);
+            console.log(purchaseOrderData);
           }
 
           return {
@@ -159,21 +188,37 @@
             loading,
             handleQuery,
             purchaseOrderData,
-            isInvisible,
+            poOptionButtonsVisible,
           };
         },
-      }).mount("#app");
+      }).mount('#app');
     </script>
   </head>
   <body class="bg-indigo-50">
     <div id="app" class="">
-      <div v-if="false" class="h-screen w-screen bg-indigo-50 absolute top-0 left-0 z-10"></div>
+      <div
+        v-if="false"
+        class="h-screen w-screen bg-indigo-50 absolute top-0 left-0 z-10"
+      ></div>
+
       <div class="h-screen flex flex-col justify-center items-center gap-4">
         <div>
-          <label :for="purchaseOrderIdInput" class="text-lg ml-1 font-semibold">Purchase Order ID:</label>
-          <input @keyup.enter="handleQuery" v-model="purchaseOrderId" :type="text" :name="purchaseOrderIdInput" :class="{ 'border-emerald-300': success }" class="w-64 h-6 p-4 rounded-lg flex items-center justify-center border-2 border-purple-500 shadow-lg outline-none" />
+          <label :for="purchaseOrderIdInput" class="text-lg ml-1 font-semibold"
+            >Purchase Order ID:</label
+          >
+          <input
+            @keyup.enter="handleQuery"
+            v-model="purchaseOrderId"
+            :type="text"
+            :name="purchaseOrderIdInput"
+            :class="{ 'border-emerald-300': success }"
+            class="w-64 h-6 p-4 rounded-lg flex items-center justify-center border-2 border-purple-500 shadow-lg outline-none"
+          />
         </div>
-        <button @click="handleQuery" class="p-4 rounded-lg flex items-center justify-center bg-purple-500 shadow-lg text-violet-100 text-xl">
+        <button
+          @click="handleQuery"
+          class="p-4 rounded-lg flex items-center justify-center bg-purple-500 shadow-lg text-violet-100 text-xl"
+        >
           <div class="lds-ellipsis" v-if="loading">
             <div></div>
             <div></div>
@@ -183,23 +228,51 @@
           <p v-if="!loading">Run Query</p>
         </button>
         <div class="flex flex-col items-center">
-          <div v-if="validationError" class="text-red-500 text-md font-semibold leading-none">{{ purchaseOrderIdSnapshot }} is not a valid purchase order ID.</div>
-          <div v-if="searchError" class="text-red-500 text-md font-semibold leading-none">{{ purchaseOrderIdSnapshot }} was not found.</div>
+          <div
+            v-if="validationError"
+            class="text-red-500 text-md font-semibold leading-none"
+          >
+            {{ purchaseOrderIdSnapshot }} is not a valid purchase order ID.
+          </div>
+          <div
+            v-if="searchError"
+            class="text-red-500 text-md font-semibold leading-none"
+          >
+            {{ purchaseOrderIdSnapshot }} was not found.
+          </div>
         </div>
-        <div :class="{ invisible: isInvisible }" class="flex flex-col items-center justify-center gap-4">
-          <div class="w-full p-2 flex align-items gap-4 bg-purple-500 rounded-lg text-violet-100 text-center">
+        <div
+          v-if="poOptionButtonsVisible"
+          class="flex flex-col items-center justify-center gap-4"
+        >
+          <div
+            class="w-full p-2 flex align-items gap-4 bg-purple-500 rounded-lg text-violet-100 text-center"
+          >
             <span class="material-symbols-outlined"> move_item </span>
             <p>Move PO</p>
           </div>
-          <div class="w-full p-2 flex align-items gap-4 bg-purple-500 rounded-lg text-violet-100 text-center">
+          <div
+            class="w-full p-2 flex align-items gap-4 bg-purple-500 rounded-lg text-violet-100 text-center"
+          >
             <span class="material-symbols-outlined"> sort </span>
             <p>Reorganize by PO</p>
           </div>
-          <div class="w-full p-2 flex align-items gap-4 bg-purple-500 rounded-lg text-violet-100 text-center">
+          <div
+            class="w-full p-2 flex align-items gap-4 bg-purple-500 rounded-lg text-violet-100 text-center"
+          >
             <span class="material-symbols-outlined"> pageview </span>
             <p>Scan for duplicates</p>
           </div>
         </div>
+      </div>
+
+      <div>
+        <h1>Move PO</h1>
+        <h2>{{purchaseOrderData[0][1]}}</h2>
+        <label for="moveTargetSheet">Target Sheet:</label>
+        <select name="moveTargetSheet" id="moveTargetSheet">
+          <option value=""></option>
+        </select>
       </div>
     </div>
   </body>
