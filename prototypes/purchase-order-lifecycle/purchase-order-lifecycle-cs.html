@@ -1,153 +1,154 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Purchase Order Details</title>
-		<script src="https://cdn.tailwindcss.com"></script>
-		<script type="importmap">
-			{
-				"imports": {
-					"vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
-				}
-			}
-		</script>
-		<style></style>
-		<script type="module" defer>
-			import { createApp, ref } from 'vue';
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Purchase Order Details</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
+        }
+      }
+    </script>
+    <style></style>
+    <script type="module" defer>
+      import { createApp, ref } from "vue";
 
-			const app = createApp({
-				setup() {
-					const purchaseOrderData = {
-						creationDate: '12 Jan 2024',
-						assignee: 'Nim',
-						vendor: 'Tal',
-						status: 'null',
-						email: 'zilkerinvests@gmail.com',
-						phone: '+1 (954) 9-7920',
-						orderType: 'email order',
-						totalUnits: 2454,
-						invoice: 'https://docs.google.com/spreadsheets/d/1TVReEBhve8o9YVhWP2G0em9gPetxeJKkTdBDM/edit#gid=1173035010&range=X52',
-						vendorPoQuote: 55325.68,
-						finalCost: 55325.68,
-						products: [
-							{
-								suggestedStore: 'MOSHILOTO',
-								sku: '792179239762',
-								upc: '792179239762',
-								asin: 'B002MPQHGW',
-								name: 'Kangol Wool 504 Black, XX-Large',
-								type: '1:1',
-								unitsPerAsin: 1,
-								unitsGoingToAmazon: 72,
-								initalUnitQuantity: 72,
-								initialAskingUnitPrice: 26.22,
-								acceptedUnitsQty: 72,
-								acceptedUnitPrice: 26.22,
-								unitTotalOrder: 1887.84,
-								unitPayoneerFees: 18.88,
-								finalUnitTotal: 1906.72,
-								finalUnitCost: 26.48,
-								perUnitCostIncurred: 0.26,
-								shippedDate: 'null',
-								totalWeight: 'null',
-								carrierName: 'null',
-								trackingId: 'null',
-								arrivalDate: 'null',
-								totalPackages: 'null',
-								totalPallets: 'null',
-							},
-							{
-								suggestedStore: 'MOSHILOTO',
-								sku: '792179239762',
-								upc: '792179239762',
-								asin: 'B002MPQHGW',
-								name: 'Kangol Wool 504 Black, XX-Large',
-								type: '1:1',
-								unitsPerAsin: 1,
-								unitsGoingToAmazon: 72,
-								initalUnitQuantity: 72,
-								initialAskingUnitPrice: 26.22,
-								acceptedUnitsQty: 72,
-								acceptedUnitPrice: 26.22,
-								unitTotalOrder: 1887.84,
-								unitPayoneerFees: 18.88,
-								finalUnitTotal: 1906.72,
-								finalUnitCost: 26.48,
-								perUnitCostIncurred: 0.26,
-								shippedDate: 'null',
-								totalWeight: 'null',
-								carrierName: 'null',
-								trackingId: 'null',
-								arrivalDate: 'null',
-								totalPackages: 'null',
-								totalPallets: 'null',
-							},
-							{
-								suggestedStore: 'MOSHILOTO',
-								sku: '792179239762',
-								upc: '792179239762',
-								asin: 'B002MPQHGW',
-								name: 'Kangol Wool 504 Black, XX-Large',
-								type: '1:1',
-								unitsPerAsin: 1,
-								unitsGoingToAmazon: 72,
-								initalUnitQuantity: 72,
-								initialAskingUnitPrice: 26.22,
-								acceptedUnitsQty: 72,
-								acceptedUnitPrice: 26.22,
-								unitTotalOrder: 1887.84,
-								unitPayoneerFees: 18.88,
-								finalUnitTotal: 1906.72,
-								finalUnitCost: 26.48,
-								perUnitCostIncurred: 0.26,
-								shippedDate: 'null',
-								totalWeight: 'null',
-								carrierName: 'null',
-								trackingId: 'null',
-								arrivalDate: 'null',
-								totalPackages: 'null',
-								totalPallets: 'null',
-							},
-							{
-								suggestedStore: 'MOSHILOTO',
-								sku: '792179239762',
-								upc: '792179239762',
-								asin: 'B002MPQHGW',
-								name: 'Kangol Wool 504 Black, XX-Large',
-								type: '1:1',
-								unitsPerAsin: 1,
-								unitsGoingToAmazon: 72,
-								initalUnitQuantity: 72,
-								initialAskingUnitPrice: 26.22,
-								acceptedUnitsQty: 72,
-								acceptedUnitPrice: 26.22,
-								unitTotalOrder: 1887.84,
-								unitPayoneerFees: 18.88,
-								finalUnitTotal: 1906.72,
-								finalUnitCost: 26.48,
-								perUnitCostIncurred: 0.26,
-								shippedDate: 'null',
-								totalWeight: 'null',
-								carrierName: 'null',
-								trackingId: 'null',
-								arrivalDate: 'null',
-								totalPackages: 'null',
-								totalPallets: 'null',
-							},
-						],
-					};
+      const app = createApp({
+        setup() {
+          const purchaseOrderData = {
+            creationDate: "12 Jan 2024",
+            assignee: "Nim",
+            vendor: "Tal",
+            status: "null",
+            email: "zilkerinvests@gmail.com",
+            phone: "+1 (954) 9-7920",
+            orderType: "email order",
+            totalUnits: 2454,
+            invoice:
+              "https://docs.google.com/spreadsheets/d/1TVReEBhve8o9YVhWP2G0em9gPetxeJKkTdBDM/edit#gid=1173035010&range=X52",
+            vendorPoQuote: 55325.68,
+            finalCost: 55325.68,
+            products: [
+              {
+                suggestedStore: "MOSHILOTO",
+                sku: "792179239762",
+                upc: "792179239762",
+                asin: "B002MPQHGW",
+                name: "Kangol Wool 504 Black, XX-Large",
+                type: "1:1",
+                unitsPerAsin: 1,
+                unitsGoingToAmazon: 72,
+                initalUnitQuantity: 72,
+                initialAskingUnitPrice: 26.22,
+                acceptedUnitsQty: 72,
+                acceptedUnitPrice: 26.22,
+                unitTotalOrder: 1887.84,
+                unitPayoneerFees: 18.88,
+                finalUnitTotal: 1906.72,
+                finalUnitCost: 26.48,
+                perUnitCostIncurred: 0.26,
+                shippedDate: "null",
+                totalWeight: "null",
+                carrierName: "null",
+                trackingId: "null",
+                arrivalDate: "null",
+                totalPackages: "null",
+                totalPallets: "null",
+              },
+              {
+                suggestedStore: "MOSHILOTO",
+                sku: "792179239762",
+                upc: "792179239762",
+                asin: "B002MPQHGW",
+                name: "Kangol Wool 504 Black, XX-Large",
+                type: "1:1",
+                unitsPerAsin: 1,
+                unitsGoingToAmazon: 72,
+                initalUnitQuantity: 72,
+                initialAskingUnitPrice: 26.22,
+                acceptedUnitsQty: 72,
+                acceptedUnitPrice: 26.22,
+                unitTotalOrder: 1887.84,
+                unitPayoneerFees: 18.88,
+                finalUnitTotal: 1906.72,
+                finalUnitCost: 26.48,
+                perUnitCostIncurred: 0.26,
+                shippedDate: "null",
+                totalWeight: "null",
+                carrierName: "null",
+                trackingId: "null",
+                arrivalDate: "null",
+                totalPackages: "null",
+                totalPallets: "null",
+              },
+              {
+                suggestedStore: "MOSHILOTO",
+                sku: "792179239762",
+                upc: "792179239762",
+                asin: "B002MPQHGW",
+                name: "Kangol Wool 504 Black, XX-Large",
+                type: "1:1",
+                unitsPerAsin: 1,
+                unitsGoingToAmazon: 72,
+                initalUnitQuantity: 72,
+                initialAskingUnitPrice: 26.22,
+                acceptedUnitsQty: 72,
+                acceptedUnitPrice: 26.22,
+                unitTotalOrder: 1887.84,
+                unitPayoneerFees: 18.88,
+                finalUnitTotal: 1906.72,
+                finalUnitCost: 26.48,
+                perUnitCostIncurred: 0.26,
+                shippedDate: "null",
+                totalWeight: "null",
+                carrierName: "null",
+                trackingId: "null",
+                arrivalDate: "null",
+                totalPackages: "null",
+                totalPallets: "null",
+              },
+              {
+                suggestedStore: "MOSHILOTO",
+                sku: "792179239762",
+                upc: "792179239762",
+                asin: "B002MPQHGW",
+                name: "Kangol Wool 504 Black, XX-Large",
+                type: "1:1",
+                unitsPerAsin: 1,
+                unitsGoingToAmazon: 72,
+                initalUnitQuantity: 72,
+                initialAskingUnitPrice: 26.22,
+                acceptedUnitsQty: 72,
+                acceptedUnitPrice: 26.22,
+                unitTotalOrder: 1887.84,
+                unitPayoneerFees: 18.88,
+                finalUnitTotal: 1906.72,
+                finalUnitCost: 26.48,
+                perUnitCostIncurred: 0.26,
+                shippedDate: "null",
+                totalWeight: "null",
+                carrierName: "null",
+                trackingId: "null",
+                arrivalDate: "null",
+                totalPackages: "null",
+                totalPallets: "null",
+              },
+            ],
+          };
 
-					return {
-						purchaseOrderData,
-					};
-				},
-			});
+          return {
+            purchaseOrderData,
+          };
+        },
+      });
 
-			app.component('product-card', {
-				props: ['product'],
-				template: `
+      app.component("product-card", {
+        props: ["product"],
+        template: `
           <div class="flex justify-between m-4 p-4 rounded-lg shadow-lg shadow-slate-300">
             <div class="w-1/2 flex flex-col">
               <div class="flex justify-between items-right">
@@ -251,62 +252,75 @@
             </div>
           </div>
         `,
-			});
+      });
 
-			app.mount('#app');
-		</script>
-	</head>
-	<body>
-		<div id="app">
-			<div class="m-4 p-4 rounded-lg shadow-lg shadow-slate-300">
-				<h1 class="h-12 grid place-items-center text-lg">Purchase Order Details</h1>
-				<div class="flex justify-between items-right">
-					<div class="w-[45%] text-right">Creation Date:</div>
-					<div class="w-[45%] text-left">{{ purchaseOrderData.creationDate }}</div>
-				</div>
-				<div class="flex justify-between items-right">
-					<div class="w-[45%] text-right">Assignee:</div>
-					<div class="w-[45%] text-left">{{ purchaseOrderData.assignee }}</div>
-				</div>
-				<div class="flex justify-between items-right">
-					<div class="w-[45%] text-right">Vendor:</div>
-					<div class="w-[45%] text-left">{{ purchaseOrderData.vendor }}</div>
-				</div>
-				<div class="flex justify-between items-right">
-					<div class="w-[45%] text-right">Status:</div>
-					<div class="w-[45%] text-left">{{ purchaseOrderData.status }}</div>
-				</div>
-				<div class="flex justify-between items-right">
-					<div class="w-[45%] text-right">Email:</div>
-					<div class="w-[45%] text-left">{{ purchaseOrderData.email }}</div>
-				</div>
-				<div class="flex justify-between items-right">
-					<div class="w-[45%] text-right">Phone:</div>
-					<div class="w-[45%] text-left">{{ purchaseOrderData.phone }}</div>
-				</div>
-				<div class="flex justify-between items-right">
-					<div class="w-[45%] text-right">Order Type:</div>
-					<div class="w-[45%] text-left">{{ purchaseOrderData.orderType }}</div>
-				</div>
-				<div class="flex justify-between items-right">
-					<div class="w-[45%] text-right">Total Units:</div>
-					<div class="w-[45%] text-left">{{ purchaseOrderData.totalUnits }}</div>
-				</div>
-				<div class="flex justify-between items-right">
-					<div class="w-[45%] text-right">Invoice:</div>
-					<a href="{{ purchaseOrderData.invoice }}" class="w-[45%] text-left">Link</a>
-				</div>
-				<div class="flex justify-between items-right">
-					<div class="w-[45%] text-right">Vendor PO Quote:</div>
-					<div class="w-[45%] text-left">{{ purchaseOrderData.vendorPoQuote }}</div>
-				</div>
-				<div class="flex justify-between items-right">
-					<div class="w-[45%] text-right">FinalCost:</div>
-					<div class="w-[45%] text-left">{{ purchaseOrderData.finalCost }}</div>
-				</div>
-			</div>
+      app.mount("#app");
+    </script>
+  </head>
+  <body>
+    <div id="app">
+      <div class="m-4 p-4 rounded-lg shadow-lg shadow-slate-300">
+        <h1 class="h-12 grid place-items-center text-lg">
+          Purchase Order Details
+        </h1>
+        <div class="flex justify-between items-right">
+          <div class="w-[45%] text-right">Creation Date:</div>
+          <div class="w-[45%] text-left">
+            {{ purchaseOrderData.creationDate }}
+          </div>
+        </div>
+        <div class="flex justify-between items-right">
+          <div class="w-[45%] text-right">Assignee:</div>
+          <div class="w-[45%] text-left">{{ purchaseOrderData.assignee }}</div>
+        </div>
+        <div class="flex justify-between items-right">
+          <div class="w-[45%] text-right">Vendor:</div>
+          <div class="w-[45%] text-left">{{ purchaseOrderData.vendor }}</div>
+        </div>
+        <div class="flex justify-between items-right">
+          <div class="w-[45%] text-right">Status:</div>
+          <div class="w-[45%] text-left">{{ purchaseOrderData.status }}</div>
+        </div>
+        <div class="flex justify-between items-right">
+          <div class="w-[45%] text-right">Email:</div>
+          <div class="w-[45%] text-left">{{ purchaseOrderData.email }}</div>
+        </div>
+        <div class="flex justify-between items-right">
+          <div class="w-[45%] text-right">Phone:</div>
+          <div class="w-[45%] text-left">{{ purchaseOrderData.phone }}</div>
+        </div>
+        <div class="flex justify-between items-right">
+          <div class="w-[45%] text-right">Order Type:</div>
+          <div class="w-[45%] text-left">{{ purchaseOrderData.orderType }}</div>
+        </div>
+        <div class="flex justify-between items-right">
+          <div class="w-[45%] text-right">Total Units:</div>
+          <div class="w-[45%] text-left">
+            {{ purchaseOrderData.totalUnits }}
+          </div>
+        </div>
+        <div class="flex justify-between items-right">
+          <div class="w-[45%] text-right">Invoice:</div>
+          <a href="{{ purchaseOrderData.invoice }}" class="w-[45%] text-left">
+            Link
+          </a>
+        </div>
+        <div class="flex justify-between items-right">
+          <div class="w-[45%] text-right">Vendor PO Quote:</div>
+          <div class="w-[45%] text-left">
+            {{ purchaseOrderData.vendorPoQuote }}
+          </div>
+        </div>
+        <div class="flex justify-between items-right">
+          <div class="w-[45%] text-right">FinalCost:</div>
+          <div class="w-[45%] text-left">{{ purchaseOrderData.finalCost }}</div>
+        </div>
+      </div>
 
-			<product-card v-for="product in purchaseOrderData.products" :key="product.asin" :product="product"></product-card>
-		</div>
-	</body>
+      <product-card
+        v-for="product in purchaseOrderData.products"
+        :key="product.asin"
+        :product="product"></product-card>
+    </div>
+  </body>
 </html>
