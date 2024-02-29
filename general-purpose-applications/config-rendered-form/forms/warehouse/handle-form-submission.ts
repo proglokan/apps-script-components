@@ -45,7 +45,7 @@ function updateExistingValues(existingValues: string[], inputData: InputData[], 
     const index = targetHeaders.get(headerName);
     if (index === undefined) throw new Error(`Could not find '${headerName}' in target headers`);
     const newValue = input['Value'] as string;
-    if (!newValue.length) continue;
+    if (newValue === '' || newValue === '$') continue;
     existingValues[index] = input['Value'] as string;
   }
   return existingValues;
