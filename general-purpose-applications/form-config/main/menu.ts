@@ -1,17 +1,23 @@
 'use strict';
-import { configRenderedFormMain } from './render-form-config';
-SpreadsheetApp.getUi().createMenu('Forms')
-  .addItem('Warehouse', 'renderWarehouseForm')
-  .addToUi();
+import { fetchSheet } from '../../../global/global';
 
-// @subroutine {Function} Pure: number → return the global configuration ID
-function globalConfigID(): number {
-  return 132112722;
+// @subroutine {Procedure} Void → add menu items to the Forms menu
+// @arg {GoogleAppsScript.Base.Menu} formsMenu → the Forms menu
+// @arg {SheetValues} configData → the configuration data
+function addMenuItems(formsMenu: GoogleAppsScript.Base.Menu, configData: string[][]) {
+  for (let x = 1; x < configData.length; ++x) {
+    const row = configData[x];
+    const formName = row[0];
+    formsMenu.addItem(`${formName} Form`, `${formName.toLowerCase()}Form`);
+  }
 }
 
-// @subroutine {Procedure} Void → define the form name and global configuration ID at author time and pass it to the respective helper function
-function renderWarehouseForm() {
-  const form = 'Warehouse';
-  const gcID = globalConfigID();
-  configRenderedFormMain(form, gcID);
+// @subroutine {Procedure} Void → render the forms menu based on the global config sheet
+function renderFormsMenu(ui: GoogleAppsScript.Base.Ui) {
+  const gcid = 0;
+  const formsMenu = ui.createMenu('Forms');
+  const gcSheet = fetchSheet(null, gcid);
+  const configData = gcSheet.getDataRange().getValues();
+  addMenuItems(formsMenu, configData);
+  formsMenu.addToUi();
 }

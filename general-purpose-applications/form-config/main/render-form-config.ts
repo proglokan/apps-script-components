@@ -90,10 +90,28 @@ function configRenderedFormMain(formName: string, gcID: number) {
   const gcBody: Body = getBody(gcSheet);
   const [lcName, targetSpreadsheet, lcID, targetSheet, renderType] = getGlobalConfigSettings(formName, gcHeaders, gcBody) as GlobalConfigSettings;
   const lcSheet = fetchSheet(null, lcID);
+  validateHeaders(lcSheet);
   const mappedLocalConfigSheet: MappedSheet = sheetToMap(lcSheet);
   const lcSettings: InputConfigSetting[] = getLocalConfigSettings(mappedLocalConfigSheet);
   const htmlOutput: GoogleAppsScript.HTML.HtmlOutput = createHtmlOutput(lcName, targetSpreadsheet, targetSheet, lcSettings);
   renderHtmlOutput(htmlOutput, formName, renderType);
 }
 
-export { configRenderedFormMain };
+function validateHeaders(lcSheet: GoogleAppsScript.Spreadsheet.Sheet) {
+  const lcSheetHeaders = getHeaders(lcSheet);
+  const targetColumnHeadersCol = lcSheetHeaders.get('Target Column Header') ?? new Error; // TODO: newError()
+  if (targetColumnHeadersCol instanceof Error) return;
+  const sourceTargetHeaders = lcSheet.getDataRange().getValues();
+  sourceTargetHeaders.shift();
+  const targetHeaders = sourceTargetHeaders.map((row) => row[targetColumnHeadersCol]);
+  const targetSheet = fetchSheet(null, 979338720);
+  const targetSheetHeaders = getHeaders(targetSheet);
+  const flaggedRows = [];
+  for (let x = 0; x < targetHeaders.length; ++x) {
+    const targetHeader = targetHeaders[x];
+    const column = targetSheetHeaders.get(targetHeader) ?? new Error;
+    if (typeof column === 'number') continue;
+    flaggedRows.push(x + 2);
+  }
+  for (const row of flaggedRows) lcSheet.getRange(row, targetColumnHeadersCol + 1).setBackground('red');
+}
