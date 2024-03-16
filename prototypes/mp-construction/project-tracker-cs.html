@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
+        }
+      }
+    </script>
+    <style>
+      ::-webkit-scrollbar {
+        width: 0.5rem;
+      }
+      ::-webkit-scrollbar-track {
+        background-color: #eef2ff;
+        border-radius: 10px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #94a3b8;
+        border-radius: 10px;
+      }
+    </style>
+    <script type="module" defer>
+      import { createApp, ref } from "vue";
+      createApp({
+        setup() {
+          const index = ref(0);
+          const projects = [
+            {
+              id: "D3",
+              date: "15 Dec 2023",
+              materials: [
+                {
+                  name: "2X4X16 (PTGC)",
+                  price: 13.48,
+                  quantity: 6,
+                  total: 80.88,
+                },
+                {
+                  name: "2X4X10 (GDF)",
+                  price: 5.82,
+                  quantity: 22,
+                  total: 128.04,
+                },
+                {
+                  name: '10" HG Spike',
+                  price: 0.58,
+                  quantity: 48,
+                  total: 27.84,
+                },
+                {
+                  name: "20'X100' 6mill black poly sheeting",
+                  price: 127,
+                  quantity: 1,
+                  total: 127,
+                },
+                {
+                  name: '3/4" Gal Nipple',
+                  price: 4.11,
+                  quantity: 1,
+                  total: 4.11,
+                },
+                {
+                  name: '3/4" Garden valve',
+                  price: 14.44,
+                  quantity: 1,
+                  total: 14.44,
+                },
+              ],
+              projectTotal: 403.94,
+              salesTax: 28.53,
+              discount: 6.9,
+            },
+            {
+              id: "D4",
+              date: "18 Dec 2023",
+              materials: [
+                {
+                  name: "2X4X16",
+                  price: 9.18,
+                  quantity: 6,
+                  total: 55.08,
+                },
+                {
+                  name: "FIRM GRIP 15 PAIR PU DIPPED GLOVE",
+                  price: 9.88,
+                  quantity: 1,
+                  total: 9.88,
+                },
+                {
+                  name: "HEAVY DUTY L  NUPLA FGL LANDSCAPE RAKE",
+                  price: 69.98,
+                  quantity: 1,
+                  total: 69.98,
+                },
+                {
+                  name: "3/8IN X 4 FT REBAR",
+                  price: 5.34,
+                  quantity: 7,
+                  total: 37.38,
+                },
+                {
+                  name: "3/8 IN X 3 FT REBAR",
+                  price: 4.96,
+                  quantity: 2,
+                  total: 9.92,
+                },
+                {
+                  name: "60LB QUIKRETE MORTAR MIX",
+                  price: 6.98,
+                  quantity: 3,
+                  total: 20.94,
+                },
+                {
+                  name: '8"X8"X16"CNCRT MW BNDBM BLCK CHKOFF',
+                  price: 2.14,
+                  quantity: 6,
+                  total: 12.84,
+                },
+                {
+                  name: '8"X8"X16" CONCRETE BLOCK CHKOFF',
+                  price: 2.67,
+                  quantity: 9,
+                  total: 24.03,
+                },
+              ],
+              projectTotal: 255.22,
+              salesTax: 18.02,
+              discount: 2.85,
+            },
+            {
+              id: "D5",
+              date: "19 Dec 2023",
+              materials: [
+                {
+                  name: "90LB QUIKRETE CONCRETE MIX",
+                  price: 6.46,
+                  quantity: 3,
+                  total: 19.38,
+                },
+                {
+                  name: "SHARPIE PERMANENT MARKER-BLACK 2PK",
+                  price: 2.68,
+                  quantity: 1,
+                  total: 2.68,
+                },
+                {
+                  name: "CLR SILICONE II DR/WINDOW #5000",
+                  price: 10.98,
+                  quantity: 1,
+                  total: 10.98,
+                },
+                {
+                  name: "SUPREME SILICONE W&D 10.1 OZ BROWN",
+                  price: 13.98,
+                  quantity: 2,
+                  total: 27.96,
+                },
+                {
+                  name: "5/8IN BONDERIZED Z BAR",
+                  price: 9.92,
+                  quantity: 2,
+                  total: 19.84,
+                },
+              ],
+              projectTotal: 84.45,
+              salesTax: 5.96,
+              discount: 2.35,
+            },
+          ];
+          return {
+            projects,
+            index,
+          };
+        },
+      }).mount("#app");
+    </script>
+  </head>
+  <body class="bg-indigo-50 w-screen h-screen grid place-items-center">
+    <div
+      id="app"
+      class="w-full h-full flex flex-col justify-center items-center">
+      <div
+        v-if="false"
+        class="h-screen w-screen bg-indigo-50 absolute top-0 left-0 z-10"></div>
+      <div
+        class="p-8 w-1/2 rounded-3xl bg-white shadow-xl flex flex-col items-center">
+        <div class="text-xl">{{ projects[index].id }}</div>
+        <div class="text-xl">{{ projects[index].date }}</div>
+        <hr class="h-1 w-full my-8 bg-indigo-50 rounded-3xl" />
+        <div class="flex gap-4 overflow-y-auto max-h-64 pr-4">
+          <div class="max-w-xs text-lg flex flex-col gap-4">
+            <h2 class="sticky top-0 bg-white">Name</h2>
+            <div class="" v-for="material of projects[index].materials">
+              <div>
+                {{ material.name.length > 20 ? `${material.name.substring(0,
+                20)} . ..` : material.name }}
+              </div>
+            </div>
+          </div>
+          <div class="max-w-xs text-lg flex flex-col gap-4">
+            <h2 class="sticky top-0 bg-white">Quantity</h2>
+            <div class="" v-for="material of projects[index].materials">
+              <div>{{ material.quantity }}</div>
+            </div>
+          </div>
+          <div class="max-w-xs text-lg flex flex-col gap-4">
+            <h2 class="sticky top-0 bg-white">Price</h2>
+            <div class="" v-for="material of projects[index].materials">
+              <div>${{ material.price }}</div>
+            </div>
+          </div>
+        </div>
+        <hr class="h-1 w-full my-8 bg-indigo-50 rounded-3xl" />
+        <div class="flex gap-4 text-lg">
+          <div class="flex flex-col items-end">
+            <div>Discount:</div>
+            <div>Sales tax:</div>
+            <div>Project total:</div>
+          </div>
+          <div class="flex flex-col items-start">
+            <div>${{ projects[index].discount}}</div>
+            <div>${{ projects[index].salesTax}}</div>
+            <div>${{ projects[index].projectTotal }}</div>
+          </div>
+        </div>
+      </div>
+      <div class="p-8 flex gap-2">
+        <div
+          :class="index === 0 ? 'bg-white/50' : 'bg-white'"
+          @click="index > 0 ? index-- : null"
+          class="w-24 h-12 grid place-items-center rounded-l-xl shadow-xl select-none cursor-pointer">
+          Prev
+        </div>
+        <div
+          :class="index === projects.length - 1 ? 'bg-white/50' : 'bg-white'"
+          @click="index < projects.length ? index++ : null"
+          class="w-24 h-12 grid place-items-center rounded-r-xl shadow-xl select-none cursor-pointer">
+          Next
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
