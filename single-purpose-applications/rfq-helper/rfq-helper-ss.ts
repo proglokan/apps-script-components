@@ -1,91 +1,69 @@
-'use strict';
-import { fetchSheet, fetchActiveSheet, getSheetHeaders, SheetHeaders, SheetValues } from '../../global/global';
+"use strict";
+import { fetchSheet, fetchActiveSheet, getSheetHeaders } from "../../global/global";
+import { type SheetHeaders, SheetValues } from "../../global/definitions";
 
-// [+] REFERENCE FOR COMPILED FILE
-//
-// type SheetHeaders = Map<string, number>;
-// type SheetValues = string[][];
-
-// @subroutine {Function} Pure: SheetValues → get target values to be sent to target sheet
-// @arg {SheetValues} sourceValues → 2d array of values to be extracted and turned into target values
-// @arg {string[]} sourceColumnNames → array of column names in the source sheet
-// @arg {SheetHeaders} sourceHeaders → the headers of the source spreadsheet
-// @arg {GoogleAppsScript.Spreadsheet.Sheet} sourceSheet → where the selection data is being pulled from
+// * Get target values to be sent to target sheet
 function getTargetValues(
   sourceValues: SheetValues,
   sourceColumnNames: string[],
   sourceHeaders: SheetHeaders,
-  sourceSheet: GoogleAppsScript.Spreadsheet.Sheet
+  sourceSheet: GoogleAppsScript.Spreadsheet.Sheet,
 ): SheetValues {
   const targetValues = [];
   for (const row of sourceValues) {
     const extractedData = [];
     for (const columnName of sourceColumnNames) {
       const column = sourceHeaders.get(columnName);
-      if (!column)
-        throw new Error(
-          `Column ${columnName} not found in ${sourceSheet.getName()}.`
-        );
+      if (!column) throw new Error(`Column ${columnName} not found in ${sourceSheet.getName()}.`);
       const value = row[column];
       extractedData.push(value);
     }
+
     targetValues.push(extractedData);
   }
+
   return targetValues;
 }
 
-// @subroutine {Function} Pure: number[] → get target column indexes in the target sheet
-// @arg {string[]} targetColumnNames → array of column names in the target sheet
-// @arg {SheetHeaders} targetSheetHeaders → the headers of the target spreadsheet
-// @arg {GoogleAppsScript.Spreadsheet.Sheet} targetSheet → where the selection data is being sent to
-function getTargetColumns(
-  targetColumnNames: string[],
-  targetSheetHeaders: SheetHeaders,
-  targetSheet: GoogleAppsScript.Spreadsheet.Sheet
-): number[] {
+// * Get target column indexes in the target sheet
+function getTargetColumns(targetColumnNames: string[], targetSheetHeaders: SheetHeaders, targetSheet: GoogleAppsScript.Spreadsheet.Sheet): number[] {
   const targetColumns = [];
   for (const columnName of targetColumnNames) {
     const column = targetSheetHeaders.get(columnName);
-    if (!column)
-      throw new Error(
-        `Column ${columnName} not found in ${targetSheet.getName()}.`
-      );
+    if (!column) throw new Error(`Column ${columnName} not found in ${targetSheet.getName()}.`);
     targetColumns.push(column);
   }
+
   return targetColumns;
 }
 
-// @subroutine {Function} Pure: SheetValues → structuring target values based on target sheets coordinates
-// @arg {number[]} targetColumns → array of column positions
-// @arg {SheetValues} targetValues → array of values to be structured and stored in the target sheet
+// * Structuring target values based on target sheets coordinates
 function getValues(targetColumns: number[], targetValues: SheetValues): SheetValues {
   const values: SheetValues = [];
   const valuesSize = Math.max(...targetColumns);
   for (const targetRow of targetValues) {
-    const data = new Array(valuesSize + 1).fill('');
+    const data = new Array(valuesSize + 1).fill("");
     for (let x = 0; x < data.length; ++x) {
       if (!targetColumns.includes(x)) continue;
       const stringIndex = targetColumns.indexOf(x);
       data[x] = targetRow[stringIndex];
     }
+
     values.push(data);
   }
+
   return values;
 }
 
-// @subroutine {Procedure}: Void → serve confirmation message to the user
+// * Serve confirmation message to the user
 function serveConfirmation(upperY: number, targetRow: number): void {
-  const message = upperY > 1
-    ? `Entries have been created in rows ${targetRow}-${targetRow + upperY}`
-    : `Entry has been created in row ${targetRow}`;
-  SpreadsheetApp.getActiveSpreadsheet().toast(message, 'RFQ has been updated');
+  const message = upperY > 1 ? `Entries have been created in rows ${targetRow}-${targetRow + upperY}` : `Entry has been created in row ${targetRow}`;
+
+  SpreadsheetApp.getActiveSpreadsheet().toast(message, "RFQ has been updated");
 }
 
-// @subroutine {Procedure}: Void → send target values from source sheet to the target sheet
-function sendValues(
-  targetSheet: GoogleAppsScript.Spreadsheet.Sheet,
-  values: SheetValues
-): void {
+// * Send target values from source sheet to the target sheet
+function sendValues(targetSheet: GoogleAppsScript.Spreadsheet.Sheet, values: SheetValues): void {
   const targetRow = targetSheet.getLastRow() + 1;
   const upperY = values.length;
   const upperX = values[0].length;
@@ -93,44 +71,23 @@ function sendValues(
   serveConfirmation(upperY, targetRow);
 }
 
-// @subroutine {Helper} Void → move selected data from source sheet to target sheet
+// * Move selected data from source sheet to target sheet
 function rfqHelperMain(): void {
-  const sourceColumnNames = [
-    'Vendor Name',
-    'Vendor SKU',
-    'Vendor UPC',
-    'ASIN',
-    'ORDER QTY',
-    'UNIT COST',
-  ];
+  const sourceColumnNames = ["Vendor Name", "Vendor SKU", "Vendor UPC", "ASIN", "ORDER QTY", "UNIT COST"];
   const sourceSheet = fetchActiveSheet();
   const sourceHeaders = getSheetHeaders(sourceSheet);
-  const targetColumnNames = [
-    'Vendor',
-    'Item (SKU) Number',
-    'UPC',
-    'ASIN',
-    'Initial Unit Qty',
-    'Initial Unit Price',
-  ];
-  const targetSheet = fetchSheet(
-    '1TVReEBhve86gr3G6o9YVhWP2G0em9gPetxeJKkTdBDM',
-    914981809
-  );
+  const targetColumnNames = ["Vendor", "Item (SKU) Number", "UPC", "ASIN", "Initial Unit Qty", "Initial Unit Price"];
+  const targetSheet = fetchSheet("1TVReEBhve86gr3G6o9YVhWP2G0em9gPetxeJKkTdBDM", 914981809);
   const targetSheetHeaders = getSheetHeaders(targetSheet);
-  const sourceValues = sourceSheet.getSelection().getActiveRange()!.getValues(); // TODO: CHECK FOR NULL SELECTION
-  if (!sourceValues.length) return; // TODO: APPLY ERROR HANDLING
-  const targetValues = getTargetValues(
-    sourceValues,
-    sourceColumnNames,
-    sourceHeaders,
-    sourceSheet
-  );
-  const targetColumns = getTargetColumns(
-    targetColumnNames,
-    targetSheetHeaders,
-    targetSheet
-  );
+
+  // TODO: CHECK FOR NULL SELECTION
+  const sourceValues = sourceSheet.getSelection().getActiveRange()!.getValues();
+
+  // TODO: APPLY ERROR HANDLING
+  if (!sourceValues.length) return;
+
+  const targetValues = getTargetValues(sourceValues, sourceColumnNames, sourceHeaders, sourceSheet);
+  const targetColumns = getTargetColumns(targetColumnNames, targetSheetHeaders, targetSheet);
   const values = getValues(targetColumns, targetValues);
   sendValues(targetSheet, values);
 }
