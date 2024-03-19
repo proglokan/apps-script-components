@@ -116,7 +116,12 @@ function newError(cause: string, message: string): Error {
 }
 
 // * Get the coordinates for a Google Apps Script range
-const getCoordinates = (sheet: GoogleAppsScript.Spreadsheet.Sheet, values: SheetValues, row: number, column: number): SheetCoordinates<number[]> => {
+const getCoordinates = (
+  sheet: GoogleAppsScript.Spreadsheet.Sheet,
+  values: SheetValues,
+  row: number | undefined,
+  column: number | undefined,
+): SheetCoordinates<number[]> => {
   if (row === undefined) row = sheet.getLastRow() + 1;
   if (column === undefined) column = 1;
   const rows = values.length;
