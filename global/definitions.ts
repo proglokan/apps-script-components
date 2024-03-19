@@ -13,3 +13,10 @@ export type InputConfigSetting = { [key: string]: string | boolean };
 export type GlobalConfigSettings = [string, string | null, number, number, string];
 
 export type InputData = { [key: string]: string | boolean };
+
+export type ComparativeAsins = {
+  reference: string[];
+  comparison: string[];
+};
+export type Data = [GoogleAppsScript.Spreadsheet.Sheet, SheetHeaders, SheetValues];
+export type Coordinates<T extends number[]> = T & { length: 4 };
