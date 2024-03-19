@@ -33,7 +33,7 @@ function markEmailThreadsAsRead(emailThreads: GoogleAppsScript.Gmail.GmailThread
 // @subroutine {Helper} Void → check for unread emails from a list of senders and forward them to a recipient specified at author-time
 function fowardEmailsMain() {
 	const query = 'is:unread from:jasonp@todaysconcept.com OR moshe@mschw.com OR rldeals20@gmail.com OR isaaclandau1@gmail.com OR raisie@lorecs.com';
-	const emailThreads: GoogleAppsScript.Gmail.GmailThread[] |  null = getEmailThreads(query);
+	const emailThreads: GoogleAppsScript.Gmail.GmailThread[] | null = getEmailThreads(query);
 	if (!emailThreads) return;
 	const recipient = 'deals@proglo.biz';
 	forwardMessages(emailThreads, recipient);

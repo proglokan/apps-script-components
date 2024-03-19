@@ -1,5 +1,5 @@
 'use strict';
-import { getHeaders, _Headers } from "../../global/global";
+import { getSheetHeaders, _Headers } from "../../global/global";
 interface Entry {
   size: number;
   row: number;
@@ -169,7 +169,7 @@ function vendorReportTrigger(): void {
   const { row, report, size } = getEntryInfo(localSheet);
   const sheet: GoogleAppsScript.Spreadsheet.Sheet = getSourceSheet();
   const data: string[][] = sheet.getDataRange().getValues();
-  const headers: _Headers = getHeaders(sheet);
+  const headers: _Headers = getSheetHeaders(sheet);
   if (!isUpdated(size, data, headers)) return newLog('vendor-reports-ss', `no updates as of ${new Date().toLocaleTimeString()} PST`);
   const contents: (string | boolean)[][] = getUpdateContents(data);
   const syncedContents = synchronizeContents(report, contents);
