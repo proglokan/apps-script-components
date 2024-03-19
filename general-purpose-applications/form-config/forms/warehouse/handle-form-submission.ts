@@ -1,8 +1,6 @@
 "use strict";
 import { fetchSheet, getSheetHeaders, getSheetValues } from "../../../../global/global";
-import { type SheetHeaders, type SheetValues, type SheetRow } from "../../../../global/definitions";
-
-type InputData = { [key: string]: string | boolean };
+import { type SheetHeaders, type SheetValues, type SheetRow, type InputData } from "../../../../global/definitions";
 
 // * Get the index of the SKU input in the input data
 function getSkuInputIndex(inputData: InputData[]): number | Error {

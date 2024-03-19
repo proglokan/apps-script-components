@@ -11,3 +11,5 @@ export type ClientQueryResponse = {
 
 export type InputConfigSetting = { [key: string]: string | boolean };
 export type GlobalConfigSettings = [string, string | null, number, number, string];
+
+export type InputData = { [key: string]: string | boolean };
