@@ -1,8 +1,8 @@
 "use strict";
 type SheetHeaders = Map<string, number>;
 type SheetValues = string[][];
-type Row = SheetValues[number];
-type Coordinates<T extends number[]> = T & { length: 4 };
+type SheetRow = SheetValues[number];
+type SheetCoordinates<T extends number[]> = T & { length: 4 };
 type MappedSheet = Map<string, string[]>;
 
 // * REFERENCE FOR COMPILED FILE
@@ -84,29 +84,6 @@ function validation(type: string, input: string): boolean | Error {
   }
 }
 
-// @subroutine {Function} Pure: Coordinates → get the coordinates of the values in the sheet
-// @arg {number} column → starting column
-// @arg {SheetValues} values → values to search for
-function getCoordinates(sheetValues: SheetValues, values: SheetValues): Coordinates<number[]> | Error {
-  const getStartingRow = (sheetValues: SheetValues, values: SheetValues): number | Error => {
-    const target = values[0].join("");
-    for (let x = 0; x < sheetValues.length; ++x) {
-      const row = sheetValues[x];
-      const source = row.join("");
-      if (source === target) return x + 1;
-    }
-    const error = new Error(`Could not find starting for provided values.`);
-    error.name = "searchError";
-    return error;
-  }
-  const row: number | Error = getStartingRow(sheetValues, values);
-  if (row instanceof Error) return row;
-  const upperX = values.length;
-  const upperY = values[0].length;
-  const valuesCoordinates: Coordinates<number[]> = [row, 1, upperX, upperY];
-  return valuesCoordinates;
-}
-
 // @subroutine {Function} Pure: MappedSheet → create a map of the sheet
 // @arg {GoogleAppsScript.Spreadsheet.Sheet} sheet → sheet to map
 function sheetToMap(sheet: GoogleAppsScript.Spreadsheet.Sheet): MappedSheet {
@@ -141,9 +118,32 @@ function newError(cause: string, message: string): Error {
   return error;
 }
 
-function createCoordinates(): Coordinates<number[]> {
-  // TODO: create coordinates for placing values in a sheet
-  return [1, 2, 3, 4];
+/*
+  returns coordinates for a Google Apps Script range
+  in the format of [row, column, rows, columns]
+*/
+const getCoordinates = (sheet: GoogleAppsScript.Spreadsheet.Sheet, values: SheetValues, row: number, column: number): SheetCoordinates<number[]> => {
+  if (row === undefined) row = sheet.getLastRow() + 1;
+  if (column === undefined) column = 1;
+  const rows = values.length;
+  const columns = values[0].length;
+  return [row, column, rows, columns];
 }
 
-export { fetchSheet, fetchActiveSheet, getSheetHeaders, SheetHeaders, getSheetValues, SheetValues, Row, parseSheet, validation, Coordinates, getCoordinates, MappedSheet, sheetToMap, getUniqueIdentifier, createCoordinates, newError };
+export {
+  fetchSheet,
+  fetchActiveSheet,
+  getSheetHeaders,
+  SheetHeaders,
+  getSheetValues,
+  SheetValues,
+  SheetRow,
+  parseSheet,
+  validation,
+  SheetCoordinates,
+  getCoordinates,
+  MappedSheet,
+  sheetToMap,
+  getUniqueIdentifier,
+  newError
+};
