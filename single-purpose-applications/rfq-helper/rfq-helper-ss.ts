@@ -1,22 +1,22 @@
 'use strict';
-import { fetchSheet, fetchActiveSheet, getHeaders, _Headers, Body } from '../../global/global';
+import { fetchSheet, fetchActiveSheet, getSheetHeaders, SheetHeaders, SheetValues } from '../../global/global';
 
 // [+] REFERENCE FOR COMPILED FILE
 //
-// type _Headers = Map<string, number>;
-// type Body = string[][];
+// type SheetHeaders = Map<string, number>;
+// type SheetValues = string[][];
 
-// @subroutine {Function} Pure: Body → get target values to be sent to target sheet
-// @arg {Body} sourceValues → 2d array of values to be extracted and turned into target values
+// @subroutine {Function} Pure: SheetValues → get target values to be sent to target sheet
+// @arg {SheetValues} sourceValues → 2d array of values to be extracted and turned into target values
 // @arg {string[]} sourceColumnNames → array of column names in the source sheet
-// @arg {_Headers} sourceHeaders → the headers of the source spreadsheet
+// @arg {SheetHeaders} sourceHeaders → the headers of the source spreadsheet
 // @arg {GoogleAppsScript.Spreadsheet.Sheet} sourceSheet → where the selection data is being pulled from
 function getTargetValues(
-  sourceValues: Body,
+  sourceValues: SheetValues,
   sourceColumnNames: string[],
-  sourceHeaders: _Headers,
+  sourceHeaders: SheetHeaders,
   sourceSheet: GoogleAppsScript.Spreadsheet.Sheet
-): Body {
+): SheetValues {
   const targetValues = [];
   for (const row of sourceValues) {
     const extractedData = [];
@@ -36,16 +36,16 @@ function getTargetValues(
 
 // @subroutine {Function} Pure: number[] → get target column indexes in the target sheet
 // @arg {string[]} targetColumnNames → array of column names in the target sheet
-// @arg {_Headers} targetHeaders → the headers of the target spreadsheet
+// @arg {SheetHeaders} targetSheetHeaders → the headers of the target spreadsheet
 // @arg {GoogleAppsScript.Spreadsheet.Sheet} targetSheet → where the selection data is being sent to
 function getTargetColumns(
   targetColumnNames: string[],
-  targetHeaders: _Headers,
+  targetSheetHeaders: SheetHeaders,
   targetSheet: GoogleAppsScript.Spreadsheet.Sheet
 ): number[] {
   const targetColumns = [];
   for (const columnName of targetColumnNames) {
-    const column = targetHeaders.get(columnName);
+    const column = targetSheetHeaders.get(columnName);
     if (!column)
       throw new Error(
         `Column ${columnName} not found in ${targetSheet.getName()}.`
@@ -55,11 +55,11 @@ function getTargetColumns(
   return targetColumns;
 }
 
-// @subroutine {Function} Pure: Body → structuring target values based on target sheets coordinates
+// @subroutine {Function} Pure: SheetValues → structuring target values based on target sheets coordinates
 // @arg {number[]} targetColumns → array of column positions
-// @arg {Body} targetValues → array of values to be structured and stored in the target sheet
-function getValues(targetColumns: number[], targetValues: Body): Body {
-  const values: Body = [];
+// @arg {SheetValues} targetValues → array of values to be structured and stored in the target sheet
+function getValues(targetColumns: number[], targetValues: SheetValues): SheetValues {
+  const values: SheetValues = [];
   const valuesSize = Math.max(...targetColumns);
   for (const targetRow of targetValues) {
     const data = new Array(valuesSize + 1).fill('');
@@ -84,7 +84,7 @@ function serveConfirmation(upperY: number, targetRow: number): void {
 // @subroutine {Procedure}: Void → send target values from source sheet to the target sheet
 function sendValues(
   targetSheet: GoogleAppsScript.Spreadsheet.Sheet,
-  values: Body
+  values: SheetValues
 ): void {
   const targetRow = targetSheet.getLastRow() + 1;
   const upperY = values.length;
@@ -104,7 +104,7 @@ function rfqHelperMain(): void {
     'UNIT COST',
   ];
   const sourceSheet = fetchActiveSheet();
-  const sourceHeaders = getHeaders(sourceSheet);
+  const sourceHeaders = getSheetHeaders(sourceSheet);
   const targetColumnNames = [
     'Vendor',
     'Item (SKU) Number',
@@ -115,9 +115,9 @@ function rfqHelperMain(): void {
   ];
   const targetSheet = fetchSheet(
     '1TVReEBhve86gr3G6o9YVhWP2G0em9gPetxeJKkTdBDM',
-    'RFQ'
+    914981809
   );
-  const targetHeaders = getHeaders(targetSheet);
+  const targetSheetHeaders = getSheetHeaders(targetSheet);
   const sourceValues = sourceSheet.getSelection().getActiveRange()!.getValues(); // TODO: CHECK FOR NULL SELECTION
   if (!sourceValues.length) return; // TODO: APPLY ERROR HANDLING
   const targetValues = getTargetValues(
@@ -128,7 +128,7 @@ function rfqHelperMain(): void {
   );
   const targetColumns = getTargetColumns(
     targetColumnNames,
-    targetHeaders,
+    targetSheetHeaders,
     targetSheet
   );
   const values = getValues(targetColumns, targetValues);
