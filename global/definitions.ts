@@ -8,3 +8,6 @@ export type ClientQueryResponse = {
   coordinates: SheetCoordinates<number[]>;
   bodyJSON: string;
 };
+
+export type InputConfigSetting = { [key: string]: string | boolean };
+export type GlobalConfigSettings = [string, string | null, number, number, string];
