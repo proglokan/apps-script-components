@@ -1,16 +1,17 @@
 "use strict";
-type _Headers = Map<string, number>;
-type Body = string[][];
-type Row = Body[number];
-type Coordinates<T extends number[]> = T & { length: 4 };
+type SheetHeaders = Map<string, number>;
+type SheetValues = string[][];
+type SheetRow = SheetValues[number];
+type SheetCoordinates<T extends number[]> = T & { length: 4 };
 type MappedSheet = Map<string, string[]>;
 
 // * REFERENCE FOR COMPILED FILE
 //
-// type _Headers = Map<string, number>;
-// type Body = string[][];
-// type Row = Body[number];
+// type SheetHeaders = Map<string, number>;
+// type SheetValues = string[][];
+// type Row = SheetValues[number];
 // type Coordinates<T extends number[]> = T & { length: 4 };
+// type MappedSheet = Map<string, string[]>;
 
 // @subroutine {Function} Pure: GoogleAppsScript.Spreadsheet.Sheet → fetch a sheet obj from internal and external workbooks
 // @arg {string} ssid → the ID of the external spreadsheet
@@ -47,28 +48,28 @@ function fetchActiveSheet(): GoogleAppsScript.Spreadsheet.Sheet {
   return sheet;
 }
 
-// @subroutine {Function} Pure: _Headers → get the headers of the source workbook
+// @subroutine {Function} Pure: SheetHeaders → get the headers of the source sheet
 // @arg {GoogleAppsScript.Spreadsheet.Sheet} sheet → the sheet in the source workbook
-function getHeaders(sheet: GoogleAppsScript.Spreadsheet.Sheet): _Headers {
+function getSheetHeaders(sheet: GoogleAppsScript.Spreadsheet.Sheet): SheetHeaders {
   const upperX: number = sheet.getLastColumn();
   const data: string[] = sheet.getRange(1, 1, 1, upperX).getValues()[0];
-  const headers: _Headers = new Map();
+  const headers: SheetHeaders = new Map();
   data.forEach((header, index) => headers.set(header, index));
   return headers;
 }
 
-function getBody(sheet: GoogleAppsScript.Spreadsheet.Sheet): Body {
-  const body = sheet.getDataRange().getValues();
-  body.shift();
-  return body;
+function getSheetValues(sheet: GoogleAppsScript.Spreadsheet.Sheet): SheetValues {
+  const sheetValues = sheet.getDataRange().getValues();
+  sheetValues.shift();
+  return sheetValues;
 }
 
-// @subroutine {Function} Pure: _Headers, Body → parse the sheet into headers and body
+// @subroutine {Function} Pure: [ SheetHeaders, SheetValues ] → parse the sheet into sheet sheet headers and sheet values
 // @arg {GoogleAppsScript.Spreadsheet.Sheet} sheet → the sheet in the source workbook
-function parseSheet(sheet: GoogleAppsScript.Spreadsheet.Sheet): [_Headers, Body] {
-  const headers = getHeaders(sheet);
-  const body = sheet.getDataRange().getValues();
-  return [headers, body];
+function parseSheet(sheet: GoogleAppsScript.Spreadsheet.Sheet): [SheetHeaders, SheetValues] {
+  const headers = getSheetHeaders(sheet);
+  const sheetValues = sheet.getDataRange().getValues();
+  return [headers, sheetValues];
 }
 
 // @subroutine {Function} Pure: boolean | Error → validate user input
@@ -83,30 +84,6 @@ function validation(type: string, input: string): boolean | Error {
   }
 }
 
-// @subroutine {Function} Pure: Coordinates<number[]> → create coordinates based on a column, body of values, and possibly a sheet
-// @arg {GoogleAppsScript.Spreadsheet.Sheet | null} sheet → sheet to get the last row of, or row 2 if null
-// @arg {number} column → starting column
-// @arg {Body} values → body of values
-function getCoordinates(sheetBody: Body, values: Body): Coordinates<number[]> | Error {
-  const getStartingRow = (sheetBody: Body, values: Body): number | Error => {
-    const target = values[0].join("");
-    for (let x = 0; x < sheetBody.length; ++x) {
-      const row = sheetBody[x];
-      const source = row.join("");
-      if (source === target) return x + 1;
-    }
-    const error = new Error(`Could not find starting for provided values.`);
-    error.name = "searchError";
-    return error;
-  }
-  const row: number | Error = getStartingRow(sheetBody, values);
-  if (row instanceof Error) return row;
-  const upperX = values.length;
-  const upperY = values[0].length;
-  const valuesCoordinates: Coordinates<number[]> = [row, 1, upperX, upperY];
-  return valuesCoordinates;
-}
-
 // @subroutine {Function} Pure: MappedSheet → create a map of the sheet
 // @arg {GoogleAppsScript.Spreadsheet.Sheet} sheet → sheet to map
 function sheetToMap(sheet: GoogleAppsScript.Spreadsheet.Sheet): MappedSheet {
@@ -114,9 +91,9 @@ function sheetToMap(sheet: GoogleAppsScript.Spreadsheet.Sheet): MappedSheet {
   const mappedSheet: MappedSheet = new Map();
   for (let x = 0; x < values[0].length; ++x) {
     const header = values[0][x];
-    const columnBody = [];
-    for (let y = 1; y < values.length; ++y) columnBody.push(values[y][x]);
-    mappedSheet.set(header, columnBody);
+    const valuesInColumn = [];
+    for (let y = 1; y < values.length; ++y) valuesInColumn.push(values[y][x]);
+    mappedSheet.set(header, valuesInColumn);
   }
   return mappedSheet;
 }
@@ -134,9 +111,39 @@ function getUniqueIdentifier(): string {
   return uniqueIdentifier;
 }
 
-function createCoordinates(): Coordinates<number[]> {
-  // TODO: create coordinates for placing values in a sheet
-  return [1, 2, 3, 4];
+function newError(cause: string, message: string): Error {
+  const error = new Error();
+  error.cause = cause;
+  error.message = message;
+  return error;
 }
 
-export { fetchSheet, fetchActiveSheet, getHeaders, _Headers, getBody, Body, Row, parseSheet, validation, Coordinates, getCoordinates, MappedSheet, sheetToMap, getUniqueIdentifier, createCoordinates };
+/*
+  returns coordinates for a Google Apps Script range
+  in the format of [row, column, rows, columns]
+*/
+const getCoordinates = (sheet: GoogleAppsScript.Spreadsheet.Sheet, values: SheetValues, row: number, column: number): SheetCoordinates<number[]> => {
+  if (row === undefined) row = sheet.getLastRow() + 1;
+  if (column === undefined) column = 1;
+  const rows = values.length;
+  const columns = values[0].length;
+  return [row, column, rows, columns];
+}
+
+export {
+  fetchSheet,
+  fetchActiveSheet,
+  getSheetHeaders,
+  SheetHeaders,
+  getSheetValues,
+  SheetValues,
+  SheetRow,
+  parseSheet,
+  validation,
+  SheetCoordinates,
+  getCoordinates,
+  MappedSheet,
+  sheetToMap,
+  getUniqueIdentifier,
+  newError
+};

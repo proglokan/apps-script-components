@@ -1,29 +1,29 @@
 'use strict';
-import { fetchSheet, sheetToMap, MappedSheet, getHeaders, _Headers, getBody, Body, Row, getUniqueIdentifier } from "../../../global/global";
+import { fetchSheet, sheetToMap, MappedSheet, getSheetHeaders, SheetHeaders, getSheetValues, SheetValues, SheetRow, getUniqueIdentifier } from "../../../global/global";
 
 type InputConfigSetting = { [key: string]: string | boolean };
 type GlobalConfigSettings = [string, string | null, number, number, string];
 
 // * REFERENCE FOR COMPILED FILE
 //
-// type _Headers = Map<string, number>;
-// type Body = string[][];
-// type Row = Body[number];
+// type SheetHeaders = Map<string, number>;
+// type SheetValues = string[][];
+// type SheetRow = SheetValues[number];
 // type InputConfigSetting = { [key: string]: string | boolean };
 // type GlobalConfigSettings = [string, string | null, number, number, string];
 
 // @subroutine {Function} Pure: GlobalConfigSettings → get global config settings for the form
 // @arg {string} formName → the name of the form to render
-// @arg {_Headers} gcHeaders → the headers of the global config sheet
-// @arg {Body} gcBody → the body of the global config sheet
-function getGlobalConfigSettings(formName: string, gcHeaders: _Headers, gcBody: Body): GlobalConfigSettings {
+// @arg {SheetHeaders} gcHeaders → the headers of the global config sheet
+// @arg {SheetValues} gcSheetValues → the body of the global config sheet
+function getGlobalConfigSettings(formName: string, gcHeaders: SheetHeaders, gcSheetValues: SheetValues): GlobalConfigSettings {
   const gcSettings = [];
-  for (let x = 0; x < gcBody.length; ++x) {
-    const row: Row = gcBody[x];
+  for (let x = 0; x < gcSheetValues.length; ++x) {
+    const row: SheetRow = gcSheetValues[x];
     const formNameHeaderIndex = gcHeaders.get('Form name');
     if (formNameHeaderIndex === undefined) throw new Error(`Header 'Form name' not found in global config sheet`);
-    const formNameInRow = row[formNameHeaderIndex];
-    if (formNameInRow !== formName) continue;
+    const formNameInSheetRow = row[formNameHeaderIndex];
+    if (formNameInSheetRow !== formName) continue;
     gcSettings.push(row);
     break;
   }
@@ -86,9 +86,9 @@ function renderHtmlOutput(htmlOutput: GoogleAppsScript.HTML.HtmlOutput, formName
 // @arg {number} gcID → ID of the global config sheet
 function configRenderedFormMain(formName: string, gcID: number) {
   const gcSheet: GoogleAppsScript.Spreadsheet.Sheet = fetchSheet(null, gcID);
-  const gcHeaders: _Headers = getHeaders(gcSheet);
-  const gcBody: Body = getBody(gcSheet);
-  const [lcName, targetSpreadsheet, lcID, targetSheet, renderType] = getGlobalConfigSettings(formName, gcHeaders, gcBody) as GlobalConfigSettings;
+  const gcHeaders: SheetHeaders = getSheetHeaders(gcSheet);
+  const gcSheetValues: SheetValues = getSheetValues(gcSheet);
+  const [lcName, targetSpreadsheet, lcID, targetSheet, renderType] = getGlobalConfigSettings(formName, gcHeaders, gcSheetValues) as GlobalConfigSettings;
   const lcSheet = fetchSheet(null, lcID);
   const mappedLocalConfigSheet: MappedSheet = sheetToMap(lcSheet);
   const lcSettings: InputConfigSetting[] = getLocalConfigSettings(mappedLocalConfigSheet);

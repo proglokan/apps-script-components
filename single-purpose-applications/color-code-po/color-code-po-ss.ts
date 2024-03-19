@@ -1,24 +1,18 @@
 'use strict';
-import { fetchActiveSheet, getHeaders, _Headers, Body } from "../../global/global";
+import { fetchActiveSheet, getSheetHeaders, SheetHeaders, SheetValues } from "../../global/global";
 
-// [+] REFERENCE FOR COMPILED FILE
-// 
-// type _Headers = Map<string, number>;
-// type Body = string[][];
-// 
-
-// @subroutine {Function} Pure: _Headers, Body → parse the sheet into headers and body
+// @subroutine {Function} Pure: SheetHeaders, SheetValues → parse the sheet into headers and body
 // @arg {GoogleAppsScript.Spreadsheet.Sheet} sheet → the sheet in the source workbook
-function parseSheet(sheet: GoogleAppsScript.Spreadsheet.Sheet): [ _Headers, Body ] {
-  const headers = getHeaders(sheet);
+function parseSheet(sheet: GoogleAppsScript.Spreadsheet.Sheet): [SheetHeaders, SheetValues] {
+  const headers = getSheetHeaders(sheet);
   const body = sheet.getDataRange().getValues();
-  return [ headers, body ];
+  return [headers, body];
 }
 
 // @subroutine {Function} Pure: Map<string, number> → create a key value pair for each purchase order such that the key is the purchase order and the value is the number of rows that purchase order spans
-// @arg {_Headers}: headers → the headers of the source workbook
-// @arg {Body}: body → the body of the source workbook
-function getPurchaseOrders(headers: _Headers, body: Body): Map<string, number> {
+// @arg {SheetHeaders}: headers → the headers of the source workbook
+// @arg {SheetValues}: body → the body of the source workbook
+function getPurchaseOrders(headers: SheetHeaders, body: SheetValues): Map<string, number> {
   const purchaseOrderColumnName = 'Purchase Order #';
   const purchaseOrderColumn = headers.get(purchaseOrderColumnName);
   if (purchaseOrderColumn === undefined) throw new Error(`No column found for name: ${purchaseOrderColumnName}`);
@@ -53,7 +47,7 @@ function getRanges(sheet: GoogleAppsScript.Spreadsheet.Sheet, purchaseOrders: Ma
 
 // @subroutine {Procedure}: Void → color code the ranges in the active sheet
 function colorCodeRanges(ranges: GoogleAppsScript.Spreadsheet.Range[]) {
-  const colors = [ '#cfe2f3', '#ead1dc' ];
+  const colors = ['#cfe2f3', '#ead1dc'];
   for (let x = 0; x < ranges.length; ++x) {
     const range = ranges[x];
     const color = colors[x % colors.length];
@@ -64,7 +58,7 @@ function colorCodeRanges(ranges: GoogleAppsScript.Spreadsheet.Range[]) {
 // @subroutine {Helper} Void → color code the purchase orders in the active sheet
 function colorCodePoMain() {
   const activeSheet = fetchActiveSheet();
-  const [ headers, body ] = parseSheet(activeSheet);
+  const [headers, body] = parseSheet(activeSheet);
   const purchaseOrders: Map<string, number> = getPurchaseOrders(headers, body);
   const ranges: GoogleAppsScript.Spreadsheet.Range[] = getRanges(activeSheet, purchaseOrders);
   colorCodeRanges(ranges);
