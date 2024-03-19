@@ -1,12 +1,6 @@
 'use strict';
 import { fetchActiveSheet, getSheetHeaders, SheetHeaders, SheetValues } from "../../global/global";
 
-// [+] REFERENCE FOR COMPILED FILE
-// 
-// type SheetHeaders = Map<string, number>;
-// type SheetValues = string[][];
-// 
-
 // @subroutine {Function} Pure: SheetHeaders, SheetValues → parse the sheet into headers and body
 // @arg {GoogleAppsScript.Spreadsheet.Sheet} sheet → the sheet in the source workbook
 function parseSheet(sheet: GoogleAppsScript.Spreadsheet.Sheet): [SheetHeaders, SheetValues] {
