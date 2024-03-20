@@ -1,5 +1,5 @@
 "use strict";
-import { fetchSheet, getSheetHeaders } from "../../global/global";
+import { fetchSheet, getSheetHeaders, getCoordinates } from "../../global/global";
 import { type SheetHeaders, type SheetValues, type ComparativeAsins, type Data, type Coordinates } from "../../global/definitions";
 
 // * Get ASINs from both the RFQ and APO - Amz sheets for comparison
@@ -49,18 +49,8 @@ const extractStatusValues = (rfqSheetValues: SheetValues, statusColumn: number):
   return statusValues;
 };
 
-// * Create coordinates based on a column, body of values, and possibly a sheet
-const getCoordinates = (sheet: GoogleAppsScript.Spreadsheet.Sheet | null, column: number, values: SheetValues): Coordinates<number[]> => {
-  const row = !sheet ? 1 : sheet.getLastRow() + 1;
-  const upperX = values.length;
-  const upperY = values[0].length;
-  const valuesCoordinates: Coordinates<number[]> = [row, column + 1, upperX, upperY];
-
-  return valuesCoordinates;
-};
-
 // * Replace values in the status column with 'duplicate order' based on a list of indexes
-const updateStatusValues = (rfqHeaders: SheetHeaders, rfqSheetValues: SheetValues, statusHeader: string, duplicates: number[]): any => {
+const updateStatusValues = (rfqHeaders: SheetHeaders, rfqSheetValues: SheetValues, statusHeader: string, duplicates: number[], rfqSheet: GoogleAppsScript.Spreadsheet.Sheet): any => {
   // TODO: FIX RETURN TYPE WHEN FUNCTION IS MODULARIZED
   const statusColumn = rfqHeaders.get(statusHeader);
   if (!statusColumn) throw new Error(`Header '${statusHeader}' not found in RFQ`);
@@ -70,7 +60,7 @@ const updateStatusValues = (rfqHeaders: SheetHeaders, rfqSheetValues: SheetValue
     statusValues[row][0] = "Duplicate Asins - Please Review";
   }
 
-  const valuesCoordinates: Coordinates<number[]> = getCoordinates(null, statusColumn, statusValues);
+  const valuesCoordinates: Coordinates<number[]> = getCoordinates(rfqSheet, statusValues, null, statusColumn);
 
   return [statusValues, valuesCoordinates];
 };
@@ -108,7 +98,9 @@ const duplicateAsinSearchMain = (): void => {
   );
   const duplicates: number[] = getDuplicates(reference, comparison);
   if (!duplicates.length) return;
-  const [statusValues, valuesCoordinates] = updateStatusValues(rfqHeaders, rfqSheetValues, statusHeader, duplicates); // TODO: SPLIT INTO TWO FUNCTIONS
+
+  // TODO: SPLIT INTO TWO FUNCTIONS
+  const [statusValues, valuesCoordinates] = updateStatusValues(rfqHeaders, rfqSheetValues, statusHeader, duplicates, rfqSheet);
   updateSheet(rfqSheet, statusValues, valuesCoordinates);
   notifyTeam(duplicates);
 };

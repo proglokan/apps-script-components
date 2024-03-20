@@ -51,8 +51,7 @@ const handleQueryMain = (purchaseOrderId: string): ClientQueryResponse | Error =
   );
   if (purchaseOrderSheetValues instanceof Error) return purchaseOrderSheetValues;
 
-  // ! getCoordinates was changed and this no longer works
-  const coordinates: SheetCoordinates<number[]> | Error = getCoordinates(activeSheet, purchaseOrderSheetValues, undefined, undefined);
+  const coordinates: SheetCoordinates<number[]> = getCoordinates(activeSheet, purchaseOrderSheetValues, null, null);
 
   if (coordinates instanceof Error) return coordinates;
   const bodyJSON = JSON.stringify(purchaseOrderSheetValues);
