@@ -10,7 +10,7 @@ import {
 } from "../../../global/definitions";
 
 // * Get global config settings for the form
-function getGlobalConfigSettings(formName: string, gcHeaders: SheetHeaders, gcSheetValues: SheetValues): GlobalConfigSettings {
+const getGlobalConfigSettings = (formName: string, gcHeaders: SheetHeaders, gcSheetValues: SheetValues): GlobalConfigSettings => {
   const gcSettings = [];
   for (let x = 0; x < gcSheetValues.length; ++x) {
     const row: SheetRow = gcSheetValues[x];
@@ -23,10 +23,10 @@ function getGlobalConfigSettings(formName: string, gcHeaders: SheetHeaders, gcSh
   }
 
   return gcSettings[0] as GlobalConfigSettings;
-}
+};
 
 // * Get local config settings for each input in the local config sheet
-function getLocalConfigSettings(mappedLocalConfigSheet: MappedSheet): InputConfigSetting[] {
+const getLocalConfigSettings = (mappedLocalConfigSheet: MappedSheet): InputConfigSetting[] => {
   if (!mappedLocalConfigSheet.size) throw new Error(`No settings found in local config sheet`);
   const lcSettings: InputConfigSetting[] = [];
   const entriesIterator = mappedLocalConfigSheet.entries();
@@ -43,15 +43,15 @@ function getLocalConfigSettings(mappedLocalConfigSheet: MappedSheet): InputConfi
   for (let x = 0; x < lcSettings.length; ++x) lcSettings[x]["uniqueIdentifier"] = getUniqueIdentifier();
 
   return lcSettings;
-}
+};
 
 // * Create an HTML output for the form & define scriptlets for local config settings and the target sheet
-function createHtmlOutput(
+const createHtmlOutput = (
   formName: string,
   targetSpreadsheet: string | null,
   targetSheet: number,
   lcSettings: InputConfigSetting[],
-): GoogleAppsScript.HTML.HtmlOutput {
+): GoogleAppsScript.HTML.HtmlOutput => {
   const template = HtmlService.createTemplateFromFile("render-warehouse-form-cs");
   template.targetSpreadsheet = targetSpreadsheet;
   template.targetSheet = targetSheet;
@@ -60,10 +60,10 @@ function createHtmlOutput(
   htmlOutput.setTitle(`${new Date().toLocaleDateString()} - ${formName} Form`).setWidth(700).setHeight(800);
 
   return htmlOutput;
-}
+};
 
 // * Render the HTML output based on the render type
-function renderHtmlOutput(htmlOutput: GoogleAppsScript.HTML.HtmlOutput, formName: string, renderType: string): void {
+const renderHtmlOutput = (htmlOutput: GoogleAppsScript.HTML.HtmlOutput, formName: string, renderType: string): void => {
   const ui: GoogleAppsScript.Base.Ui = SpreadsheetApp.getUi();
   switch (renderType) {
     case "Modeless dialog":
@@ -78,10 +78,10 @@ function renderHtmlOutput(htmlOutput: GoogleAppsScript.HTML.HtmlOutput, formName
       ui.showSidebar(htmlOutput);
       break;
   }
-}
+};
 
 // * Given a form name and global config ID, render a form based on local config settings
-function configRenderedFormMain(formName: string, gcID: number) {
+const configRenderedFormMain = (formName: string, gcID: number) => {
   const gcSheet: GoogleAppsScript.Spreadsheet.Sheet = fetchSheet(null, gcID);
   const gcHeaders: SheetHeaders = getSheetHeaders(gcSheet);
   const gcSheetValues: SheetValues = getSheetValues(gcSheet);
@@ -95,6 +95,6 @@ function configRenderedFormMain(formName: string, gcID: number) {
   const lcSettings: InputConfigSetting[] = getLocalConfigSettings(mappedLocalConfigSheet);
   const htmlOutput: GoogleAppsScript.HTML.HtmlOutput = createHtmlOutput(lcName, targetSpreadsheet, targetSheet, lcSettings);
   renderHtmlOutput(htmlOutput, formName, renderType);
-}
+};
 
 export { configRenderedFormMain };

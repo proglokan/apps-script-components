@@ -3,12 +3,12 @@ import { fetchSheet, fetchActiveSheet, getSheetHeaders } from "../../global/glob
 import { type SheetHeaders, SheetValues } from "../../global/definitions";
 
 // * Get target values to be sent to target sheet
-function getTargetValues(
+const getTargetValues = (
   sourceValues: SheetValues,
   sourceColumnNames: string[],
   sourceHeaders: SheetHeaders,
   sourceSheet: GoogleAppsScript.Spreadsheet.Sheet,
-): SheetValues {
+): SheetValues => {
   const targetValues = [];
   for (const row of sourceValues) {
     const extractedData = [];
@@ -23,10 +23,14 @@ function getTargetValues(
   }
 
   return targetValues;
-}
+};
 
 // * Get target column indexes in the target sheet
-function getTargetColumns(targetColumnNames: string[], targetSheetHeaders: SheetHeaders, targetSheet: GoogleAppsScript.Spreadsheet.Sheet): number[] {
+const getTargetColumns = (
+  targetColumnNames: string[],
+  targetSheetHeaders: SheetHeaders,
+  targetSheet: GoogleAppsScript.Spreadsheet.Sheet,
+): number[] => {
   const targetColumns = [];
   for (const columnName of targetColumnNames) {
     const column = targetSheetHeaders.get(columnName);
@@ -35,10 +39,10 @@ function getTargetColumns(targetColumnNames: string[], targetSheetHeaders: Sheet
   }
 
   return targetColumns;
-}
+};
 
 // * Structuring target values based on target sheets coordinates
-function getValues(targetColumns: number[], targetValues: SheetValues): SheetValues {
+const getValues = (targetColumns: number[], targetValues: SheetValues): SheetValues => {
   const values: SheetValues = [];
   const valuesSize = Math.max(...targetColumns);
   for (const targetRow of targetValues) {
@@ -53,26 +57,26 @@ function getValues(targetColumns: number[], targetValues: SheetValues): SheetVal
   }
 
   return values;
-}
+};
 
 // * Serve confirmation message to the user
-function serveConfirmation(upperY: number, targetRow: number): void {
+const serveConfirmation = (upperY: number, targetRow: number): void => {
   const message = upperY > 1 ? `Entries have been created in rows ${targetRow}-${targetRow + upperY}` : `Entry has been created in row ${targetRow}`;
 
   SpreadsheetApp.getActiveSpreadsheet().toast(message, "RFQ has been updated");
-}
+};
 
 // * Send target values from source sheet to the target sheet
-function sendValues(targetSheet: GoogleAppsScript.Spreadsheet.Sheet, values: SheetValues): void {
+const sendValues = (targetSheet: GoogleAppsScript.Spreadsheet.Sheet, values: SheetValues): void => {
   const targetRow = targetSheet.getLastRow() + 1;
   const upperY = values.length;
   const upperX = values[0].length;
   targetSheet.getRange(targetRow, 1, upperY, upperX).setValues(values);
   serveConfirmation(upperY, targetRow);
-}
+};
 
 // * Move selected data from source sheet to target sheet
-function rfqHelperMain(): void {
+const rfqHelperMain = (): void => {
   const sourceColumnNames = ["Vendor Name", "Vendor SKU", "Vendor UPC", "ASIN", "ORDER QTY", "UNIT COST"];
   const sourceSheet = fetchActiveSheet();
   const sourceHeaders = getSheetHeaders(sourceSheet);
@@ -90,4 +94,4 @@ function rfqHelperMain(): void {
   const targetColumns = getTargetColumns(targetColumnNames, targetSheetHeaders, targetSheet);
   const values = getValues(targetColumns, targetValues);
   sendValues(targetSheet, values);
-}
+};

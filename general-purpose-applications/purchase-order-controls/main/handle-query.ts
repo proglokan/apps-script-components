@@ -3,20 +3,20 @@ import { getSheetHeaders, getCoordinates, fetchActiveSheet } from "../../../glob
 import { type SheetHeaders, type SheetValues, type SheetRow, type SheetCoordinates, type ClientQueryResponse } from "../../../global/definitions";
 
 // * Get the x coordinate of the purchase order ID column from the active sheet
-function getPurchaseOrderColumn(activeSheetHeaders: SheetHeaders, purchaseOrderHeader: string, activeSheetName: string): number | Error {
+const getPurchaseOrderColumn = (activeSheetHeaders: SheetHeaders, purchaseOrderHeader: string, activeSheetName: string): number | Error => {
   const purchaseOrderIndex = activeSheetHeaders.get(purchaseOrderHeader);
   if (!purchaseOrderIndex) return new Error(`Could not find column ' ${purchaseOrderHeader}' in '${activeSheetName}'.`);
 
   return purchaseOrderIndex;
-}
+};
 
 // * Get the purchase order body from the active sheet
-function getPurchaseOrderSheetValues(
+const getPurchaseOrderSheetValues = (
   purchaseOrderColumn: number,
   purchaseOrderId: string,
   activeSheetSheetValues: SheetValues,
   activeSheetName: string,
-): SheetValues | Error {
+): SheetValues | Error => {
   const purchaseOrderSheetValues: SheetValues = [];
   for (let x = 1; x < activeSheetSheetValues.length; ++x) {
     const row: SheetRow = activeSheetSheetValues[x];
@@ -32,10 +32,10 @@ function getPurchaseOrderSheetValues(
   }
 
   return purchaseOrderSheetValues;
-}
+};
 
 // * Get the purchase order body from the active sheet
-function handleQueryMain(purchaseOrderId: string): ClientQueryResponse | Error {
+const handleQueryMain = (purchaseOrderId: string): ClientQueryResponse | Error => {
   const activeSheet = fetchActiveSheet();
   const activeSheetHeaders: SheetHeaders = getSheetHeaders(activeSheet);
   const activeSheetSheetValues: SheetValues = activeSheet.getDataRange().getValues();
@@ -59,4 +59,4 @@ function handleQueryMain(purchaseOrderId: string): ClientQueryResponse | Error {
   const response: ClientQueryResponse = { coordinates, bodyJSON };
 
   return response;
-}
+};

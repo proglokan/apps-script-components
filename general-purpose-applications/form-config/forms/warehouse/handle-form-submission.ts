@@ -3,7 +3,7 @@ import { fetchSheet, getSheetHeaders, getSheetValues } from "../../../../global/
 import { type SheetHeaders, type SheetValues, type SheetRow, type InputData } from "../../../../global/definitions";
 
 // * Get the index of the SKU input in the input data
-function getSkuInputIndex(inputData: InputData[]): number | Error {
+const getSkuInputIndex = (inputData: InputData[]): number | Error => {
   for (let x = 0; x < inputData.length; ++x) {
     const input = inputData[x];
     if (input["Label"] !== "SKU") continue;
@@ -12,10 +12,10 @@ function getSkuInputIndex(inputData: InputData[]): number | Error {
   }
 
   return new Error(`Could not find 'SKU' in input data`);
-}
+};
 
 // * Get the row in the target sheet that corresponds to the SKU in the input data
-function getTargetSheetRow(targetSheetValues: SheetValues, skuCol: number, targetSku: string): number | Error {
+const getTargetSheetRow = (targetSheetValues: SheetValues, skuCol: number, targetSku: string): number | Error => {
   for (let x = 0; x < targetSheetValues.length; ++x) {
     const row: SheetRow = targetSheetValues[x];
     const sku = row[skuCol];
@@ -25,10 +25,10 @@ function getTargetSheetRow(targetSheetValues: SheetValues, skuCol: number, targe
   }
 
   return new Error(`Could not find SKU in target sheet`);
-}
+};
 
 // * Update the existing values in the target sheet with the new values from the input data respective to the target headers
-function updateExistingValues(existingValues: string[], inputData: InputData[], targetSheetHeaders: SheetHeaders): string[] {
+const updateExistingValues = (existingValues: string[], inputData: InputData[], targetSheetHeaders: SheetHeaders): string[] => {
   for (let x = 0; x < inputData.length; ++x) {
     const input: InputData = inputData[x];
     const headerName = input["Target Column Header"] as string;
@@ -41,10 +41,10 @@ function updateExistingValues(existingValues: string[], inputData: InputData[], 
   }
 
   return existingValues;
-}
+};
 
 // * Given input data, update the target sheet with the new values, unless an input is empty
-function handleWarehouseFormSubmission(targetSpreadsheet: string | null, targetSheetID: number, inputData: InputData[]) {
+const handleWarehouseFormSubmission = (targetSpreadsheet: string | null, targetSheetID: number, inputData: InputData[]) => {
   const ssid = targetSpreadsheet === "null" ? null : targetSpreadsheet;
   const targetSheet: GoogleAppsScript.Spreadsheet.Sheet = fetchSheet(ssid, targetSheetID);
   const targetSheetHeaders: SheetHeaders = getSheetHeaders(targetSheet);
@@ -64,4 +64,4 @@ function handleWarehouseFormSubmission(targetSpreadsheet: string | null, targetS
   SpreadsheetApp.getActiveSpreadsheet().toast(`Entry appended to row ${targetSheet.getLastRow()}`);
 
   return `Entry appended to row ${targetSheet.getLastRow()}`;
-}
+};

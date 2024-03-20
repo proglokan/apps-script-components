@@ -1,7 +1,7 @@
 // https://docs.google.com/spreadsheets/d/17NY0wiA-90cD_QINeJiauHht8Bdq7cZd09YJDKUrgKY/edit#gid=0
 
 // * Find the target email address and update its status to 'Opened'
-function updateEmailStatus(targetEmailAddress: string) {
+const updateEmailStatus = (targetEmailAddress: string) => {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const sheet = ss.getSheetByName("Email Tracking");
 
@@ -19,10 +19,10 @@ function updateEmailStatus(targetEmailAddress: string) {
     sheet.getRange(row, 3).setValue(time);
     break;
   }
-}
+};
 
 // * Update email status in spreadsheet respective to req.parameter
-function doGet(req: { parameter: { method: string; email: string } }) {
+const doGet = (req: { parameter: { method: string; email: string } }) => {
   const method = req.parameter["method"];
   switch (method) {
     case "track":
@@ -32,10 +32,10 @@ function doGet(req: { parameter: { method: string; email: string } }) {
     default:
       break;
   }
-}
+};
 
 // * Send an email to test the tracking pixel
-function sendEmails() {
+const sendEmails = () => {
   if (MailApp.getRemainingDailyQuota() <= 1) return;
   const template = HtmlService.createTemplateFromFile("email-tracker-cs.html");
   template.email = "kanproglo@gmail.com";
@@ -43,4 +43,4 @@ function sendEmails() {
   GmailApp.sendEmail("kanproglo@gmail.com", "Subject: tracking pixel 5", "Body: body contents", {
     htmlBody: message,
   });
-}
+};
