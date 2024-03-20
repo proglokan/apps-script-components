@@ -1,5 +1,5 @@
 'use strict';
-import { getHeaders } from "../../global/global";
+import { getSheetHeaders } from "../../global/global";
 // [+] REFERENCE FOR COMPILED FILE
 // 
 // type _Headers = Map<string, number>;
@@ -164,7 +164,7 @@ function vendorReportTrigger() {
     const { row, report, size } = getEntryInfo(localSheet);
     const sheet = getSourceSheet();
     const data = sheet.getDataRange().getValues();
-    const headers = getHeaders(sheet);
+    const headers = getSheetHeaders(sheet);
     if (!isUpdated(size, data, headers))
         return newLog('vendor-reports-ss', `no updates as of ${new Date().toLocaleTimeString()} PST`);
     const contents = getUpdateContents(data);
