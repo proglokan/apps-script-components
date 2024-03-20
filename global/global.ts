@@ -119,11 +119,11 @@ const newError = (cause: string, message: string): Error => {
 const getCoordinates = (
   sheet: GoogleAppsScript.Spreadsheet.Sheet,
   values: SheetValues,
-  row: number | undefined,
-  column: number | undefined,
+  row: number | null,
+  column: number | null,
 ): SheetCoordinates<number[]> => {
-  if (row === undefined) row = sheet.getLastRow() + 1;
-  if (column === undefined) column = 1;
+  if (row === null) row = sheet.getLastRow() + 1;
+  if (column === null) column = 1;
   const rows = values.length;
   const columns = values[0].length;
 
