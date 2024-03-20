@@ -1,5 +1,5 @@
 "use strict";
-import { type SheetHeaders, type SheetValues, type SheetRow, type SheetCoordinates, type MappedSheet } from "./definitions";
+import { type SheetHeaders, type SheetValues, type SheetCoordinates, type MappedSheet } from "./definitions";
 
 // * Fetch a sheet obj from internal and external workbooks
 const fetchSheet = (ssid: string | null, sid: number): GoogleAppsScript.Spreadsheet.Sheet => {
