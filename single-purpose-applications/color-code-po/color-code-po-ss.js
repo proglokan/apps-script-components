@@ -1,22 +1,15 @@
-'use strict';
-import { fetchActiveSheet, getHeaders } from "../../global/global";
-// [+] REFERENCE FOR COMPILED FILE
-// 
-// type _Headers = Map<string, number>;
-// type Body = string[][];
-// 
-// @subroutine {Function} Pure: _Headers, Body → parse the sheet into headers and body
-// @arg {GoogleAppsScript.Spreadsheet.Sheet} sheet → the sheet in the source workbook
-function parseSheet(sheet) {
-    const headers = getHeaders(sheet);
+"use strict";
+import { fetchActiveSheet, getSheetHeaders } from "../../global/global";
+// * Parse the sheet into headers and body
+// ! This function is already made in global.ts
+const parseSheet = (sheet) => {
+    const headers = getSheetHeaders(sheet);
     const body = sheet.getDataRange().getValues();
     return [headers, body];
-}
-// @subroutine {Function} Pure: Map<string, number> → create a key value pair for each purchase order such that the key is the purchase order and the value is the number of rows that purchase order spans
-// @arg {_Headers}: headers → the headers of the source workbook
-// @arg {Body}: body → the body of the source workbook
-function getPurchaseOrders(headers, body) {
-    const purchaseOrderColumnName = 'Purchase Order #';
+};
+// * Create a key value pair for each purchase order such that the key is the purchase order and the value is the number of rows that purchase order spans
+const getPurchaseOrders = (headers, body) => {
+    const purchaseOrderColumnName = "Purchase Order #";
     const purchaseOrderColumn = headers.get(purchaseOrderColumnName);
     if (purchaseOrderColumn === undefined)
         throw new Error(`No column found for name: ${purchaseOrderColumnName}`);
@@ -32,11 +25,9 @@ function getPurchaseOrders(headers, body) {
         purchaseOrders.set(purchaseOrder, purchaseOrderEntry + 1);
     }
     return purchaseOrders;
-}
-// @subroutine {Function} Pure: GoogleAppsScript.Spreadsheet.Range[] → get the upper bounds of each purchase order and store them in a list as ranges
-// @arg {GoogleAppsScript.Spreadsheet.Sheet} sheet → the user's active sheet in the active spreadsheet
-// @arg {Map<string, number>} purchaseOrders → the purchase orders and the number of rows they span
-function getRanges(sheet, purchaseOrders) {
+};
+// * Get the upper bounds of each purchase order and store them in a list as ranges
+const getRanges = (sheet, purchaseOrders) => {
     const ranges = [];
     const upperX = sheet.getLastColumn() - 1;
     let row = 2;
@@ -46,22 +37,22 @@ function getRanges(sheet, purchaseOrders) {
         row += upperY;
     }
     return ranges;
-}
-// @subroutine {Procedure}: Void → color code the ranges in the active sheet
-function colorCodeRanges(ranges) {
-    const colors = ['#cfe2f3', '#ead1dc'];
+};
+// * Color code the ranges in the active sheet
+const colorCodeRanges = (ranges) => {
+    const colors = ["#cfe2f3", "#ead1dc"];
     for (let x = 0; x < ranges.length; ++x) {
         const range = ranges[x];
         const color = colors[x % colors.length];
         range.setBackground(color);
     }
-}
-// @subroutine {Helper} Void → color code the purchase orders in the active sheet
-function colorCodePoMain() {
+};
+// * Color code the purchase orders in the active sheet
+const colorCodePoMain = () => {
     const activeSheet = fetchActiveSheet();
     const [headers, body] = parseSheet(activeSheet);
     const purchaseOrders = getPurchaseOrders(headers, body);
     const ranges = getRanges(activeSheet, purchaseOrders);
     colorCodeRanges(ranges);
-}
+};
 //# sourceMappingURL=color-code-po-ss.js.map

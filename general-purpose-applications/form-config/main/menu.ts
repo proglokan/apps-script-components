@@ -1,17 +1,16 @@
-'use strict';
-import { configRenderedFormMain } from './render-form-config';
-SpreadsheetApp.getUi().createMenu('Forms')
-  .addItem('Warehouse', 'renderWarehouseForm')
-  .addToUi();
+"use strict";
+import { configRenderedFormMain } from "./render-form-config";
 
-// @subroutine {Function} Pure: number → return the global configuration ID
-function globalConfigID(): number {
+SpreadsheetApp.getUi().createMenu("Forms").addItem("Warehouse", "renderWarehouseForm").addToUi();
+
+// * Return the global configuration ID
+const globalConfigID = (): number => {
   return 132112722;
-}
+};
 
-// @subroutine {Procedure} Void → define the form name and global configuration ID at author time and pass it to the respective helper function
-function renderWarehouseForm() {
-  const form = 'Warehouse';
+// * Define the form name and global configuration ID at author time and pass it to the respective helper function
+const renderWarehouseForm = () => {
+  const form = "Warehouse";
   const gcID = globalConfigID();
   configRenderedFormMain(form, gcID);
-}
+};

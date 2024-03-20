@@ -1,68 +1,62 @@
-'use strict';
-import { getSheetHeaders, getCoordinates, fetchActiveSheet, SheetHeaders, SheetValues, SheetRow, Coordinates } from "../../../global/global";
+"use strict";
+import { getSheetHeaders, getCoordinates, fetchActiveSheet } from "../../../global/global";
+import { type SheetHeaders, type SheetValues, type SheetRow, type SheetCoordinates, type ClientQueryResponse } from "../../../global/definitions";
 
-interface ClientQueryResponse {
-	coordinates: Coordinates<number[]>;
-	bodyJSON: string;
-}
+// * Get the x coordinate of the purchase order ID column from the active sheet
+const getPurchaseOrderColumn = (activeSheetHeaders: SheetHeaders, purchaseOrderHeader: string, activeSheetName: string): number | Error => {
+  const purchaseOrderIndex = activeSheetHeaders.get(purchaseOrderHeader);
+  if (!purchaseOrderIndex) return new Error(`Could not find column ' ${purchaseOrderHeader}' in '${activeSheetName}'.`);
 
-// * REFERENCE FOR COMPILED FILE
-//
-// interface ClientQueryResponse {
-// 	coordinates: Coordinates<number[]>;
-// 	bodyJSON: string;
-// }
-// 
-// type SheetHeaders = Map<string, number>;
-// type SheetValues = string[][];
-// type SheetRow = SheetValues[number];
-// type Coordinates<T extends number[]> = T & { length: 4 };
+  return purchaseOrderIndex;
+};
 
-// @subroutine {Function} Pure: number | Error → get the x coordinate of the purchase order ID column from the active sheet
-// @arg {SheetHeaders} activeSheetHeaders → the headers of the active sheet
-// @arg {string} purchaseOrderHeader → the header of the purchase order column
-// @arg {string} activeSheetName → the name of the active sheet
-function getPurchaseOrderColumn(activeSheetHeaders: SheetHeaders, purchaseOrderHeader: string, activeSheetName: string): number | Error {
-	const purchaseOrderIndex = activeSheetHeaders.get(purchaseOrderHeader);
-	if (!purchaseOrderIndex) return new Error(`Could not find column ' ${purchaseOrderHeader}' in '${activeSheetName}'.`);
-	return purchaseOrderIndex;
-}
+// * Get the purchase order body from the active sheet
+const getPurchaseOrderSheetValues = (
+  purchaseOrderColumn: number,
+  purchaseOrderId: string,
+  activeSheetSheetValues: SheetValues,
+  activeSheetName: string,
+): SheetValues | Error => {
+  const purchaseOrderSheetValues: SheetValues = [];
+  for (let x = 1; x < activeSheetSheetValues.length; ++x) {
+    const row: SheetRow = activeSheetSheetValues[x];
+    const thisPurchaseOrderId = row[purchaseOrderColumn];
+    if (thisPurchaseOrderId === purchaseOrderId) purchaseOrderSheetValues.push(row);
+  }
 
-// @subroutine {Function} Pure: SheetValues | Error → get the purchase order body from the active sheet
-// @arg {number} purchaseOrderColumn → the x coordinate of the purchase order column
-// @arg {string} purchaseOrderId → the purchase order id to search for
-// @arg {SheetValues} activeSheetSheetValues → the active sheet body
-// @arg {string} activeSheetName → the name of the active sheet
-function getPurchaseOrderSheetValues(purchaseOrderColumn: number, purchaseOrderId: string, activeSheetSheetValues: SheetValues, activeSheetName: string): SheetValues | Error {
-	const purchaseOrderSheetValues: SheetValues = [];
-	for (let x = 1; x < activeSheetSheetValues.length; ++x) {
-		const row: SheetRow = activeSheetSheetValues[x];
-		const thisPurchaseOrderId = row[purchaseOrderColumn];
-		if (thisPurchaseOrderId === purchaseOrderId) purchaseOrderSheetValues.push(row);
-	}
-	if (!purchaseOrderSheetValues.length) {
-		const error = new Error(`Could not find purchase order '${purchaseOrderId}' in '${activeSheetName}'.`);
-		error.name = 'searchError';
-		return error;
-	}
-	return purchaseOrderSheetValues;
-}
+  if (!purchaseOrderSheetValues.length) {
+    const error = new Error(`Could not find purchase order '${purchaseOrderId}' in '${activeSheetName}'.`);
+    error.name = "searchError";
 
-// @subroutine {Helper} Pure: SheetValues | Error → get the purchase order body from the active sheet
-// @arg {string} purchaseOrderId → the purchase order id to search for, from user input
-function handleQueryMain(purchaseOrderId: string): ClientQueryResponse | Error {
-	const activeSheet = fetchActiveSheet();
-	const activeSheetHeaders: SheetHeaders = getSheetHeaders(activeSheet);
-	const activeSheetSheetValues: SheetValues = activeSheet.getDataRange().getValues();
-	const purchaseOrderHeader = 'Purchase Order #';
-	const activeSheetName = activeSheet.getName();
-	const purchaseOrderColumn = getPurchaseOrderColumn(activeSheetHeaders, purchaseOrderHeader, activeSheetName);
-	if (purchaseOrderColumn instanceof Error) return purchaseOrderColumn;
-	const purchaseOrderSheetValues: SheetValues | Error = getPurchaseOrderSheetValues(purchaseOrderColumn, purchaseOrderId, activeSheetSheetValues, activeSheetName);
-	if (purchaseOrderSheetValues instanceof Error) return purchaseOrderSheetValues;
-	const coordinates: Coordinates<number[]> | Error = getCoordinates(activeSheetSheetValues, purchaseOrderSheetValues);
-	if (coordinates instanceof Error) return coordinates;
-	const bodyJSON = JSON.stringify(purchaseOrderSheetValues);
-	const response: ClientQueryResponse = { coordinates, bodyJSON };
-	return response;
-}
+    return error;
+  }
+
+  return purchaseOrderSheetValues;
+};
+
+// * Get the purchase order body from the active sheet
+const handleQueryMain = (purchaseOrderId: string): ClientQueryResponse | Error => {
+  const activeSheet = fetchActiveSheet();
+  const activeSheetHeaders: SheetHeaders = getSheetHeaders(activeSheet);
+  const activeSheetSheetValues: SheetValues = activeSheet.getDataRange().getValues();
+  const purchaseOrderHeader = "Purchase Order #";
+  const activeSheetName = activeSheet.getName();
+  const purchaseOrderColumn = getPurchaseOrderColumn(activeSheetHeaders, purchaseOrderHeader, activeSheetName);
+  if (purchaseOrderColumn instanceof Error) return purchaseOrderColumn;
+  const purchaseOrderSheetValues: SheetValues | Error = getPurchaseOrderSheetValues(
+    purchaseOrderColumn,
+    purchaseOrderId,
+    activeSheetSheetValues,
+    activeSheetName,
+  );
+  if (purchaseOrderSheetValues instanceof Error) return purchaseOrderSheetValues;
+
+  // ! getCoordinates was changed and this no longer works
+  const coordinates: SheetCoordinates<number[]> | Error = getCoordinates(activeSheet, purchaseOrderSheetValues, undefined, undefined);
+
+  if (coordinates instanceof Error) return coordinates;
+  const bodyJSON = JSON.stringify(purchaseOrderSheetValues);
+  const response: ClientQueryResponse = { coordinates, bodyJSON };
+
+  return response;
+};
