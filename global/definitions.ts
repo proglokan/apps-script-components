@@ -1,3 +1,4 @@
+export type Sheet = GoogleAppsScript.Spreadsheet.Sheet;
 export type SheetHeaders = Map<string, number>;
 export type SheetValues = string[][];
 export type SheetRow = SheetValues[number];
