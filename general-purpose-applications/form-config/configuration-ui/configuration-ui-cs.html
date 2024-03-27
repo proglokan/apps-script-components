@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Configuration UI</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
+        }
+      }
+    </script>
+    <style>
+      ::-webkit-scrollbar {
+        width: 0.5rem;
+      }
+      ::-webkit-scrollbar-track {
+        background-color: #eef2ff;
+        border-radius: 10px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #94a3b8;
+        border-radius: 10px;
+      }
+    </style>
+    <script type="module" defer>
+      import { createApp, ref } from "vue";
+      createApp({
+        setup() {
+          const inputData = ref({
+            type: "",
+            label: "",
+            attributes: {
+              placeholder: "",
+              required: false,
+              value: "",
+              maxLength: "",
+              minLength: "",
+              max: "",
+              min: "",
+              step: "",
+              readOnly: false,
+              pattern: "",
+              spellCheck: false,
+              cols: "",
+              rows: "",
+            },
+            groupedCheckbox: false,
+            checkboxes: [{ label: "", checked: false }],
+            radio: [{ label: "", active: false }],
+            dropdown: [""],
+          });
+
+          const inputTypeChange = (e) => {
+            inputData.value = {
+              ...inputData.value,
+              label: "",
+              attributes: {
+                placeholder: "",
+                required: false,
+                value: "",
+                maxLength: "",
+                minLength: "",
+                max: "",
+                min: "",
+                step: "",
+                readOnly: false,
+                pattern: "",
+                spellCheck: false,
+                cols: "",
+                rows: "",
+              },
+              groupedCheckbox: false,
+              checkboxes: [{ label: "", checked: false }],
+              radio: [{ label: "", active: false }],
+              dropdown: [""],
+            };
+          };
+
+          const addCheckbox = () => {
+            const newCheckbox = { label: "", checked: false };
+            inputData.value.checkboxes = [...inputData.value.checkboxes, newCheckbox];
+          };
+
+          const addRadio = () => {
+            const newRadio = { label: "", active: false };
+            inputData.value.radio = [...inputData.value.radio, newRadio];
+          };
+
+          const addDropdown = () => {
+            const newOption = "";
+            inputData.value.dropdown = [...inputData.value.dropdown, newOption];
+          };
+
+          const resetData = () => {
+            inputData.value = {
+              type: "",
+              label: "",
+              attributes: {
+                placeholder: "",
+                required: false,
+                value: "",
+                maxLength: "",
+                minLength: "",
+                max: "",
+                min: "",
+                step: "",
+                readOnly: false,
+                pattern: "",
+                spellCheck: false,
+                cols: "",
+                rows: "",
+              },
+              groupedCheckbox: false,
+              checkboxes: [{ label: "", checked: false }],
+              radio: [{ label: "", active: false }],
+              dropdown: [""],
+            };
+          };
+
+          const submitData = () => {
+            console.log(inputData.value);
+          };
+
+          return { inputData, inputTypeChange, addCheckbox, addRadio, addDropdown, resetData, submitData };
+        },
+      }).mount("#app");
+    </script>
+  </head>
+  <body class="bg-indigo-50 w-screen h-screen grid place-items-center">
+    <section id="app" class="">
+      <div v-if="false" class="h-screen w-screen bg-indigo-50 absolute top-0 left-0 z-10"></div>
+      <form @submit="" class="flex flex-col gap-4">
+        <section>
+          <label for="input-type">Input Type</label>
+          <select name="input-type" id="input-type" v-model="inputData.type" @change="inputTypeChange">
+            <option value="text">Text</option>
+            <option value="number">Number</option>
+            <option value="date">Date</option>
+            <option value="email">Email</option>
+            <option value="password">Password</option>
+            <option value="tel">Phone Number</option>
+            <option value="checkbox">Checkbox</option>
+            <option value="radio">Radio</option>
+            <option value="text-area">Text Area</option>
+            <option value="dropdown">Dropdown</option>
+          </select>
+        </section>
+
+        <section v-if="inputData.type === 'text'">
+          <div>
+            <label for="text-label">Input Label</label>
+            <input type="text" name="text-label" id="text-label" v-model="inputData.label" />
+          </div>
+          <div>
+            <label for="text-placeholder">Place Holder</label>
+            <input type="text" name="text-placeholder" id="text-placeholder" v-model="inputData.attributes.placeholder" />
+          </div>
+          <div>
+            <label for="text-required">Required</label>
+            <input type="checkbox" name="text-required" id="text-required" v-model="inputData.attributes.required" />
+          </div>
+          <div>
+            <label for="text-value">Default Value</label>
+            <input type="text" name="text-value" id="text-value" v-model="inputData.attributes.value" />
+          </div>
+          <div>
+            <label for="text-max-length">Max Length</label>
+            <input type="text" name="text-max-length" id="text-max-length" v-model="inputData.attributes.maxLength" />
+          </div>
+          <div>
+            <label for="text-min-length">Min Length</label>
+            <input type="text" name="text-min-length" id="text-min-length" v-model="inputData.attributes.minLength" />
+          </div>
+          <div>
+            <label for="text-read-only">Read Only</label>
+            <input type="checkbox" name="text-read-only" id="text-read-only" v-model="inputData.attributes.readOnly" />
+          </div>
+          <div>
+            <label for="text-pattern">Pattern</label>
+            <input type="text" name="text-pattern" id="text-pattern" v-model="inputData.attributes.pattern" />
+          </div>
+          <div>
+            <label for="text-spell-check">Spell Check</label>
+            <input type="checkbox" name="text-spell-check" id="text-spell-check" v-model="inputData.attributes.spellCheck" />
+          </div>
+        </section>
+
+        <section v-if="inputData.type === 'number'">
+          <div>
+            <label for="number-label">Input Label</label>
+            <input type="text" name="number-label" id="number-label" v-model="inputData.label" />
+          </div>
+          <div>
+            <label for="number-placeholder">Place Holder</label>
+            <input type="text" name="number-placeholder" id="number-placeholder" v-model="inputData.attributes.placeholder" />
+          </div>
+          <div>
+            <label for="number-required">Required</label>
+            <input type="checkbox" name="number-required" id="number-required" v-model="inputData.attributes.required" />
+          </div>
+          <div>
+            <label for="number-value">Default Value</label>
+            <input type="text" name="number-value" id="number-value" v-model="inputData.attributes.value" />
+          </div>
+          <div>
+            <label for="number-read-only">Read Only</label>
+            <input type="checkbox" name="number-read-only" id="number-read-only" v-model="inputData.attributes.readOnly" />
+          </div>
+          <div>
+            <label for="number-max">Max</label>
+            <input type="text" name="number-max" id="number-max" v-model="inputData.attributes.max" />
+          </div>
+          <div>
+            <label for="number-min">Min</label>
+            <input type="text" name="number-min" id="number-min" v-model="inputData.attributes.min" />
+          </div>
+          <div>
+            <label for="number-step">Step</label>
+            <input type="text" name="number-step" id="number-step" v-model="inputData.attributes.step" />
+          </div>
+        </section>
+
+        <section v-if="inputData.type === 'date'">
+          <div>
+            <label for="date-label">Input Label</label>
+            <input type="text" name="date-label" id="date-label" v-model="inputData.label" />
+          </div>
+          <div>
+            <label for="date-required">Required</label>
+            <input type="checkbox" name="date-required" id="date-required" v-model="inputData.attributes.required" />
+          </div>
+          <div>
+            <label for="date-value">Default Value</label>
+            <input type="text" name="date-value" id="date-value" v-model="inputData.attributes.value" />
+          </div>
+          <div>
+            <label for="date-max">Max</label>
+            <input type="text" name="date-max" id="date-max" v-model="inputData.attributes.max" />
+          </div>
+          <div>
+            <label for="date-min">Min</label>
+            <input type="text" name="date-min" id="date-min" v-model="inputData.attributes.min" />
+          </div>
+          <div>
+            <label for="date-step">Step</label>
+            <input type="text" name="date-step" id="date-step" v-model="inputData.attributes.step" />
+          </div>
+        </section>
+
+        <section v-if="inputData.type === 'email' || inputData.type === 'password' || inputData.type === 'tel'">
+          <div>
+            <label for="other-label">Input Label</label>
+            <input type="text" name="other-label" id="other-label" v-model="inputData.label" />
+          </div>
+          <div>
+            <label for="other-placeholder">Place Holder</label>
+            <input type="text" name="other-placeholder" id="other-placeholder" v-model="inputData.attributes.placeholder" />
+          </div>
+          <div>
+            <label for="other-required">Required</label>
+            <input type="checkbox" name="other-required" id="other-required" v-model="inputData.attributes.required" />
+          </div>
+          <div>
+            <label for="other-value">Default Value</label>
+            <input type="text" name="other-value" id="other-value" v-model="inputData.attributes.value" />
+          </div>
+          <div>
+            <label for="other-max-length">Max Length</label>
+            <input type="text" name="other-max-length" id="other-max-length" v-model="inputData.attributes.maxLength" />
+          </div>
+          <div>
+            <label for="other-min-length">Min Length</label>
+            <input type="text" name="other-min-length" id="other-min-length" v-model="inputData.attributes.minLength" />
+          </div>
+          <div>
+            <label for="other-read-only">Read Only</label>
+            <input type="checkbox" name="other-read-only" id="other-read-only" v-model="inputData.attributes.readOnly" />
+          </div>
+          <div>
+            <label for="other-pattern">Pattern</label>
+            <input type="text" name="other-pattern" id="other-pattern" v-model="inputData.attributes.pattern" />
+          </div>
+        </section>
+
+        <section v-if="inputData.type === 'text-area'">
+          <div>
+            <label for="text-area-label">Input Label</label>
+            <input type="text" name="text-area-label" id="text-area-label" v-model="inputData.label" />
+          </div>
+          <div>
+            <label for="text-area-placeholder">Place Holder</label>
+            <input type="text" name="text-area-placeholder" id="text-area-placeholder" v-model="inputData.attributes.placeholder" />
+          </div>
+          <div>
+            <label for="text-area-required">Required</label>
+            <input type="checkbox" name="text-area-required" id="text-area-required" v-model="inputData.attributes.required" />
+          </div>
+          <div>
+            <label for="text-area-value">Default Value</label>
+            <input type="text" name="text-area-value" id="text-area-value" v-model="inputData.attributes.value" />
+          </div>
+          <div>
+            <label for="text-area-max-length">Max Length</label>
+            <input type="text" name="text-area-max-length" id="text-area-max-length" v-model="inputData.attributes.maxLength" />
+          </div>
+          <div>
+            <label for="text-area-min-length">Min Length</label>
+            <input type="text" name="text-area-min-length" id="text-area-min-length" v-model="inputData.attributes.minLength" />
+          </div>
+          <div>
+            <label for="text-area-read-only">Read Only</label>
+            <input type="checkbox" name="text-area-read-only" id="text-area-read-only" v-model="inputData.attributes.readOnly" />
+          </div>
+          <div>
+            <label for="text-area-spell-check">Spell Check</label>
+            <input type="checkbox" name="text-area-spell-check" id="text-area-spell-check" v-model="inputData.attributes.spellCheck" />
+          </div>
+          <div>
+            <label for="text-area-cols">Columns</label>
+            <input type="text" name="text-area-cols" id="text-area-cols" v-model="inputData.attributes.cols" />
+          </div>
+          <div>
+            <label for="text-area-rows">Rows</label>
+            <input type="text" name="text-area-rows" id="text-area-rows" v-model="inputData.attributes.rows" />
+          </div>
+        </section>
+
+        <section v-if="inputData.type === 'checkbox'">
+          <div>
+            <label for="grouped-checkboxes">Grouped Checkboxes</label>
+            <input type="checkbox" name="grouped-checkboxes" id="grouped-checkboxes" v-model="inputData.groupedCheckbox" />
+          </div>
+          <div v-if="!inputData.groupedCheckbox">
+            <div>
+              <label for="checkbox-label">Input Label</label>
+              <input type="text" name="checkbox-label" id="checkbox-label" v-model="inputData.checkboxes[0].label" />
+            </div>
+            <div>
+              <label for="checkbox-checked">Checked by Default</label>
+              <input type="checkbox" name="checkbox-checked" id="checkbox-checked" v-model="inputData.checkboxes[0].checked" />
+            </div>
+          </div>
+
+          <div v-if="inputData.groupedCheckbox">
+            <div>
+              <label for="groupcb-label">Group Label</label>
+              <input type="text" name="groupcb-label" id="groupcb-label" v-model="inputData.label" />
+            </div>
+            <div v-for="(checkbox, idx) in inputData.checkboxes">
+              <div>
+                <label v-bind:for="`groupcb-label-${idx}`">Input Label</label>
+                <input
+                  type="text"
+                  v-bind:name="`groupcb-label-${idx}`"
+                  v-bind:id="`groupcb-label-${idx}`"
+                  v-model="inputData.checkboxes[idx].label"
+                />
+              </div>
+              <div>
+                <label v-bind:for="`groupcb-checked-${idx}`">Checked by Default</label>
+                <input
+                  type="checkbox"
+                  v-bind:name="`groupcb-checked-${idx}`"
+                  v-bind:id="`groupcb-checked-${idx}`"
+                  v-model="inputData.checkboxes[idx].checked"
+                />
+              </div>
+            </div>
+            <button type="button" @click="addCheckbox">Add checklist</button>
+          </div>
+        </section>
+
+        <section v-if="inputData.type === 'radio'">
+          <div>
+            <label for="group-radio-label">Group Label</label>
+            <input type="text" name="group-radio-label" id="group-radio-label" v-model="inputData.label" />
+          </div>
+          <div v-for="(radio, idx) in inputData.radio">
+            <div>
+              <label v-bind:for="`group-radio-label-${idx}`">Input Label</label>
+              <input
+                type="text"
+                v-bind:name="`group-radio-label-${idx}`"
+                v-bind:id="`group-radio-label-${idx}`"
+                v-model="inputData.radio[idx].label"
+              />
+            </div>
+          </div>
+          <button type="button" @click="addRadio">Add Radio Button</button>
+        </section>
+
+        <section v-if="inputData.type === 'dropdown'">
+          <div>
+            <label for="groupdd-label">Group Label</label>
+            <input type="text" name="groupdd-label" id="groupdd-label" v-model="inputData.label" />
+          </div>
+          <div v-for="(dd, idx) in inputData.dropdown">
+            <div>
+              <label v-bind:for="`groupdd-label-${idx}`">Input Label</label>
+              <input type="text" v-bind:name="`groupdd-label-${idx}`" v-bind:id="`groupdd-label-${idx}`" v-model="inputData.dropdown[idx]" />
+            </div>
+          </div>
+          <button type="button" @click="addDropdown">Add Option</button>
+        </section>
+        <div>
+          <button type="button" @click="resetData">Reset</button>
+          <button type="button" @click="submitData">Submit</button>
+        </div>
+      </form>
+    </section>
+  </body>
+</html>
