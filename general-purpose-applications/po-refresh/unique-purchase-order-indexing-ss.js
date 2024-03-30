@@ -1,9 +1,4 @@
-import { newError, getSheetHeaders, getUniqueIdentifier, fetchSheet, fetchActiveSheet } from "../../global/global";
-const getSheetValues = (sheet) => {
-    if (sheet === null)
-        sheet = fetchActiveSheet();
-    return sheet.getDataRange().getValues();
-};
+import { getCoordinates, getSheetValues, newError, getSheetHeaders, getUniqueIdentifier, fetchSheets, getSheetFormulas, updateSheetValuesWithFormulas } from "../../global/global";
 const getColumn = (headers, key) => {
     const value = headers.get(key) ?? newError('poRefresh-ss.ts', `Could not find \"${key}\" header`);
     if (value instanceof Error)
@@ -22,7 +17,7 @@ const createUniqueIndexing = (sheetValues, purchaseOrderColumn, subPurchaseOrder
 };
 const purchaseOrderIndexingMain = () => {
     const sids = [1, 2, 3];
-    const [...sheets] = sids.map((sid) => fetchSheet(null, sid));
+    const sheets = fetchSheets(sids);
     const dataRanges = [];
     const [purchaseOrderHeader, subPurchaseOrderHeader] = ['Purchase Order #', 'Sub PO #'];
     for (const sheet of sheets) {
@@ -30,10 +25,15 @@ const purchaseOrderIndexingMain = () => {
         const purchaseOrderColumn = getColumn(sheetHeaders, purchaseOrderHeader);
         const subPurchaseOrderColumn = getColumn(sheetHeaders, subPurchaseOrderHeader);
         const sheetValues = getSheetValues(sheet);
+        const sheetFormulas = getSheetFormulas(sheet);
         const updatedSheetValues = createUniqueIndexing(sheetValues, purchaseOrderColumn, subPurchaseOrderColumn);
-        dataRanges.push([sheet, updatedSheetValues]);
+        const updatedSheetValuesWithFormulas = updateSheetValuesWithFormulas(updatedSheetValues, sheetFormulas);
+        dataRanges.push([sheet, updatedSheetValuesWithFormulas, subPurchaseOrderColumn]);
     }
-    for (const [sheet, values] of dataRanges)
-        sheet.getDataRange().setValues(values);
+    for (const [sheet, values, subPurchaseOrderColumn] of dataRanges) {
+        const subPurchaseOrderIDs = values.map((row) => [row[subPurchaseOrderColumn]]);
+        const [row, column, rows, columns] = getCoordinates(sheet, subPurchaseOrderIDs, 2, subPurchaseOrderColumn + 1);
+        sheet.getRange(row, column, rows, columns).setValues(subPurchaseOrderIDs);
+    }
 };
 //# sourceMappingURL=unique-purchase-order-indexing-ss.js.map

@@ -1,5 +1,5 @@
 "use strict";
-import { type SheetHeaders, type SheetValues, type SheetCoordinates, type MappedSheet } from "./definitions";
+import { type SheetHeaders, type SheetValues, type SheetFormulas, type SheetCoordinates, type MappedSheet, SheetRow } from "./definitions";
 
 // * Fetch a sheet obj from internal and external workbooks
 const fetchSheet = (ssid: string | null, sid: number): GoogleAppsScript.Spreadsheet.Sheet => {
@@ -46,16 +46,28 @@ const getSheetHeaders = (sheet: GoogleAppsScript.Spreadsheet.Sheet): SheetHeader
   const data: string[] = sheet.getRange(1, 1, 1, upperX).getValues()[0];
   const headers: SheetHeaders = new Map();
   data.forEach((header, index) => headers.set(header, index));
-
   return headers;
 };
+
+// * Get the column index of a header
+const getColumn = (headers: SheetHeaders, key: string) => {
+  const value = headers.get(key) ?? newError('poRefresh-ss.ts', `Could not find \"${key}\" header`);
+  if (value instanceof Error) throw value;
+  return value;
+}
 
 // * Get the values of the source sheet
 const getSheetValues = (sheet: GoogleAppsScript.Spreadsheet.Sheet): SheetValues => {
   const sheetValues = sheet.getDataRange().getValues();
   sheetValues.shift();
-
   return sheetValues;
+};
+
+// * Get the formulas of the source sheet
+const getSheetFormulas = (sheet: GoogleAppsScript.Spreadsheet.Sheet): SheetFormulas => {
+  const sheetFormulas = sheet.getDataRange().getFormulas();
+  sheetFormulas.shift();
+  return sheetFormulas;
 };
 
 // * Parse the sheet into sheet headers and sheet values
@@ -87,7 +99,6 @@ const sheetToMap = (sheet: GoogleAppsScript.Spreadsheet.Sheet): MappedSheet => {
     for (let y = 1; y < values.length; ++y) valuesInColumn.push(values[y][x]);
     mappedSheet.set(header, valuesInColumn);
   }
-
   return mappedSheet;
 };
 
@@ -100,9 +111,7 @@ const getUniqueIdentifier = (): string => {
     const randomLetter = availableLetters[randomIndex];
     lettersOfUniqueIdentifier.push(randomLetter);
   }
-
   const uniqueIdentifier = lettersOfUniqueIdentifier.join("");
-
   return uniqueIdentifier;
 };
 
@@ -130,10 +139,36 @@ const getCoordinates = (
   return [row, column, rows, columns];
 };
 
+// * Given values and formulas, update the sheet values with the formulas
+const updateSheetValuesWithFormulas = (values: SheetValues, formulas: SheetFormulas) => {
+  for (let x = 0; x < formulas.length; x++) {
+    const row: SheetRow = formulas[x];
+    for (let y = 0; y < row.length; y++) {
+      const cell = row[y];
+      if (cell === '') continue;
+      values[x][y] = cell;
+    }
+  }
+  return values;
+}
+
+// * Fetch multiple internal sheets given a list of sheet IDs
+const fetchSheets = (sids: number[]) => {
+  const sheets = [];
+  for (let x = 0; x < sids.length; x++) {
+    const sid = sids[x];
+    const sheet = fetchSheet(null, sid);
+    sheets.push(sheet);
+  }
+  return sheets;
+}
+
 export {
   fetchSheet,
+  fetchSheets,
   fetchActiveSheet,
   getSheetHeaders,
+  getColumn,
   getSheetValues,
   parseSheet,
   validation,
@@ -141,4 +176,6 @@ export {
   sheetToMap,
   getUniqueIdentifier,
   newError,
+  getSheetFormulas,
+  updateSheetValuesWithFormulas
 };

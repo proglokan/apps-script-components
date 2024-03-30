@@ -1,11 +1,5 @@
-import { getSheetHeaders, fetchActiveSheet, getCoordinates, newError } from "../../global/global";
+import { getSheetHeaders, fetchActiveSheet, getCoordinates, getColumn, newError } from "../../global/global";
 import { type Sheet, type SheetHeaders, type SheetRow, type SheetValues, type SheetCoordinates } from "../../global/definitions";
-
-const getColumn = (headers: SheetHeaders, key: string) => {
-  const value = headers.get(key) ?? newError('poRefresh-ss.ts', `Could not find \"${key}\" header`);
-  if (value instanceof Error) throw value;
-  return value;
-}
 
 const summation = (source: string, target: string, errorMessage: string, zeroRule: boolean) => {
   const sheet: Sheet = fetchActiveSheet();
@@ -26,7 +20,7 @@ const summation = (source: string, target: string, errorMessage: string, zeroRul
   }
   const purchaseOrderTotals = new Map();
   for (const [purchaseOrder, purchaseOrderData] of individualPurchaseOrders) {
-    let totalWeight = 0;
+    let totalWeight: number | string = 0;
     for (const row of purchaseOrderData) {
       const weight = +row[individualWeightCol];
       if (weight === 0 && zeroRule) {
