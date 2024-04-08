@@ -36,8 +36,7 @@ const handleQueryMain = (purchaseOrderId) => {
     const purchaseOrderSheetValues = getPurchaseOrderSheetValues(purchaseOrderColumn, purchaseOrderId, activeSheetSheetValues, activeSheetName);
     if (purchaseOrderSheetValues instanceof Error)
         return purchaseOrderSheetValues;
-    // ! getCoordinates was changed and this no longer works
-    const coordinates = getCoordinates(activeSheet, purchaseOrderSheetValues, undefined, undefined);
+    const coordinates = getCoordinates(activeSheet, purchaseOrderSheetValues, null, null);
     if (coordinates instanceof Error)
         return coordinates;
     const bodyJSON = JSON.stringify(purchaseOrderSheetValues);

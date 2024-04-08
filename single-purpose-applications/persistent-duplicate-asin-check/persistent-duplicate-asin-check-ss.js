@@ -1,5 +1,5 @@
 "use strict";
-import { fetchSheet, getSheetHeaders } from "../../global/global";
+import { fetchSheet, getSheetHeaders, getCoordinates } from "../../global/global";
 // * Get ASINs from both the RFQ and APO - Amz sheets for comparison
 const getComparativeAsins = (data, asinHeader) => {
     const comparativeAsins = { reference: [], comparison: [] };
@@ -43,16 +43,8 @@ const extractStatusValues = (rfqSheetValues, statusColumn) => {
     }
     return statusValues;
 };
-// * Create coordinates based on a column, body of values, and possibly a sheet
-const getCoordinates = (sheet, column, values) => {
-    const row = !sheet ? 1 : sheet.getLastRow() + 1;
-    const upperX = values.length;
-    const upperY = values[0].length;
-    const valuesCoordinates = [row, column + 1, upperX, upperY];
-    return valuesCoordinates;
-};
 // * Replace values in the status column with 'duplicate order' based on a list of indexes
-const updateStatusValues = (rfqHeaders, rfqSheetValues, statusHeader, duplicates) => {
+const updateStatusValues = (rfqHeaders, rfqSheetValues, statusHeader, duplicates, rfqSheet) => {
     // TODO: FIX RETURN TYPE WHEN FUNCTION IS MODULARIZED
     const statusColumn = rfqHeaders.get(statusHeader);
     if (!statusColumn)
@@ -62,7 +54,7 @@ const updateStatusValues = (rfqHeaders, rfqSheetValues, statusHeader, duplicates
         const row = duplicates[x];
         statusValues[row][0] = "Duplicate Asins - Please Review";
     }
-    const valuesCoordinates = getCoordinates(null, statusColumn, statusValues);
+    const valuesCoordinates = getCoordinates(rfqSheet, statusValues, null, statusColumn);
     return [statusValues, valuesCoordinates];
 };
 // * Update a given sheet with values based on a given range
@@ -94,7 +86,8 @@ const duplicateAsinSearchMain = () => {
     const duplicates = getDuplicates(reference, comparison);
     if (!duplicates.length)
         return;
-    const [statusValues, valuesCoordinates] = updateStatusValues(rfqHeaders, rfqSheetValues, statusHeader, duplicates); // TODO: SPLIT INTO TWO FUNCTIONS
+    // TODO: SPLIT INTO TWO FUNCTIONS
+    const [statusValues, valuesCoordinates] = updateStatusValues(rfqHeaders, rfqSheetValues, statusHeader, duplicates, rfqSheet);
     updateSheet(rfqSheet, statusValues, valuesCoordinates);
     notifyTeam(duplicates);
 };

@@ -95,9 +95,9 @@ const newError = (cause, message) => {
 };
 // * Get the coordinates for a Google Apps Script range
 const getCoordinates = (sheet, values, row, column) => {
-    if (row === undefined)
+    if (row === null)
         row = sheet.getLastRow() + 1;
-    if (column === undefined)
+    if (column === null)
         column = 1;
     const rows = values.length;
     const columns = values[0].length;
