@@ -40,6 +40,13 @@ const getSheetHeaders = (sheet) => {
     data.forEach((header, index) => headers.set(header, index));
     return headers;
 };
+// * Get the column index of a header
+const getColumn = (headers, key) => {
+    const value = headers.get(key) ?? newError('poRefresh-ss.ts', `Could not find \"${key}\" header`);
+    if (value instanceof Error)
+        throw value;
+    return value;
+};
 // * Get the values of the source sheet
 const getSheetValues = (sheet) => {
     const sheetValues = sheet.getDataRange().getValues();
@@ -95,13 +102,13 @@ const newError = (cause, message) => {
 };
 // * Get the coordinates for a Google Apps Script range
 const getCoordinates = (sheet, values, row, column) => {
-    if (row === undefined)
+    if (row === null)
         row = sheet.getLastRow() + 1;
-    if (column === undefined)
+    if (column === null)
         column = 1;
     const rows = values.length;
     const columns = values[0].length;
     return [row, column, rows, columns];
 };
-export { fetchSheet, fetchActiveSheet, getSheetHeaders, getSheetValues, parseSheet, validation, getCoordinates, sheetToMap, getUniqueIdentifier, newError, };
+export { fetchSheet, fetchActiveSheet, getSheetHeaders, getColumn, getSheetValues, parseSheet, validation, getCoordinates, sheetToMap, getUniqueIdentifier, newError, };
 //# sourceMappingURL=global.js.map
