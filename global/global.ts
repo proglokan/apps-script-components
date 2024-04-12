@@ -50,6 +50,13 @@ const getSheetHeaders = (sheet: GoogleAppsScript.Spreadsheet.Sheet): SheetHeader
   return headers;
 };
 
+// * Get the column index of a header
+const getColumn = (headers: SheetHeaders, key: string) => {
+  const value = headers.get(key) ?? newError('poRefresh-ss.ts', `Could not find \"${key}\" header`);
+  if (value instanceof Error) throw value;
+  return value;
+};
+
 // * Get the values of the source sheet
 const getSheetValues = (sheet: GoogleAppsScript.Spreadsheet.Sheet): SheetValues => {
   const sheetValues = sheet.getDataRange().getValues();
@@ -134,6 +141,7 @@ export {
   fetchSheet,
   fetchActiveSheet,
   getSheetHeaders,
+  getColumn,
   getSheetValues,
   parseSheet,
   validation,
