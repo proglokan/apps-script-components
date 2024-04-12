@@ -54,7 +54,7 @@ const doGet: (request: GoogleAppsScript.Events.DoGet) => GoogleAppsScript.Conten
   const sheetValues = sheet.getDataRange().getValues();
 
   const targetHeaders = new Map([
-    ['dealType', 'Deal Type',],
+    // ['dealType', 'Deal Type',],
     ['date', 'Date',],
     ['name', 'Item Name',],
     ['totalQuantity', 'Accepted ASIN to Amazon',],
@@ -63,7 +63,7 @@ const doGet: (request: GoogleAppsScript.Events.DoGet) => GoogleAppsScript.Conten
     ['asin', 'ASIN'],
     ['userName', 'Parent Store'],
     ['supplierToWarehouseTrackingID', 'Tracking ID'],
-    ['supplierToWarehouseCost', 'ASIN Vendor-WH-Ship Cost Total'],
+    ['supplierToWarehouseCost', 'Per ASIN Vendor-Anywhere-Ship Cost'],
     ['warehouseToAmazonCost', 'ASIN WH-AMZ-Ship Cost Total'],
   ]);
 

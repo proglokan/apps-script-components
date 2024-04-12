@@ -46,7 +46,7 @@ const doGet = (request) => {
     }
     const sheetValues = sheet.getDataRange().getValues();
     const targetHeaders = new Map([
-        ['dealType', 'Deal Type',],
+        // ['dealType', 'Deal Type',],
         ['date', 'Date',],
         ['name', 'Item Name',],
         ['totalQuantity', 'Accepted ASIN to Amazon',],
@@ -55,7 +55,7 @@ const doGet = (request) => {
         ['asin', 'ASIN'],
         ['userName', 'Parent Store'],
         ['supplierToWarehouseTrackingID', 'Tracking ID'],
-        ['supplierToWarehouseCost', 'ASIN Vendor-WH-Ship Cost Total'],
+        ['supplierToWarehouseCost', 'Per ASIN Vendor-Anywhere-Ship Cost'],
         ['warehouseToAmazonCost', 'ASIN WH-AMZ-Ship Cost Total'],
     ]);
     const targetColumns = [];
@@ -115,5 +115,5 @@ const testRequest = async () => {
         }
     }).then(data => console.log(data)).catch(error => console.log(error));
 };
-// testRequest();
+testRequest();
 //# sourceMappingURL=profitzon-panel-endpoint-ss.js.map
