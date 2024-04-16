@@ -11,7 +11,6 @@ const missingParameterHandler = () => {
 const missingSheetHandler = () => {
   const response = ContentService.createTextOutput();
   response.setMimeType(ContentService.MimeType.TEXT);
-  response.setMimeType(ContentService.MimeType.TEXT);
   response.setContent('Sheet was not found in the spreadsheet. Please contact Kan via WhatsApp or Slack');
   return response;
 }
