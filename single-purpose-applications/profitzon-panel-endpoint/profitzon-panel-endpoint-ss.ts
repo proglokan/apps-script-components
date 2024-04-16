@@ -1,18 +1,18 @@
 import { SheetHeaders, SheetRow } from "../../global/definitions";
 import { fetchSheet, newError, getSheetHeaders, getColumn } from "../../global/global";
 
+const missingParameterHandler = () => {
+  const response = ContentService.createTextOutput();
+  response.setMimeType(ContentService.MimeType.TEXT);
+  response.setContent('No SKU provided');
+  return response;
+}
+
 const missingSheetHandler = () => {
   const response = ContentService.createTextOutput();
   response.setMimeType(ContentService.MimeType.TEXT);
   response.setMimeType(ContentService.MimeType.TEXT);
   response.setContent('Sheet was not found in the spreadsheet. Please contact Kan via WhatsApp or Slack');
-  return response;
-}
-
-const missingParameterHandler = () => {
-  const response = ContentService.createTextOutput();
-  response.setMimeType(ContentService.MimeType.TEXT);
-  response.setContent('No SKU provided');
   return response;
 }
 
@@ -112,7 +112,7 @@ const doGet: (request: GoogleAppsScript.Events.DoGet) => GoogleAppsScript.Conten
   return response;
 }
 
-const testRequest = async () => {
+const request = async () => {
   const endpointURL = 'https://script.google.com/macros/s/AKfycbzYU80hktOuqSZG7H_BjZV6dme4m-EEJpDdKJSd4_TZW7SyXMOSn01Mei4Js_jNZuhV/exec';
   const sku = 'B000ARPVQ6_655';
   const fetchUrl = `${endpointURL}?sku=${sku}`;
@@ -129,4 +129,4 @@ const testRequest = async () => {
   }).then(data => console.log(data)).catch(error => console.log(error));
 };
 
-testRequest();
+request();
